@@ -87,5 +87,6 @@ Bu proje GitHub Pages üzerinde barındırılacak şekilde tasarlanmıştır:
 
 **Baran Deniz Mutluoğlu**  
 - **Eğitim:** OSTİM Teknik Üniversitesi — Yazılım Mühendisliği (2. Sınıf)  
+- **E-posta:** [barandmutluoglu@icloud.com](mailto:barandmutluoglu@icloud.com)  
 - **GitHub:** [@2f7fjrk4sw-prog](https://github.com/2f7fjrk4sw-prog)  
 - **Alan:** C#, .NET, Unity Engine & Modern Web Mimarisi  

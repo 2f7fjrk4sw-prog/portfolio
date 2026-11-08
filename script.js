@@ -82,7 +82,7 @@ function initCopyEmail() {
 
   if (!copyBtn) return;
 
-  const emailToCopy = copyBtn.getAttribute('data-email') || '240208406@ostimteknik.edu.tr';
+  const emailToCopy = copyBtn.getAttribute('data-email') || 'barandmutluoglu@icloud.com';
   const copyLabel = copyBtn.querySelector('.copy-text');
 
   copyBtn.addEventListener('click', async () => {
@@ -818,7 +818,7 @@ Pratikler: Clean Code, Defansif Tasarım, YAGNI & KISS
 
       case 'contact':
         appendLine(`
-E-posta: 240208406@ostimteknik.edu.tr
+E-posta: barandmutluoglu@icloud.com
 GitHub:  https://github.com/2f7fjrk4sw-prog
 Durum:   Staj ve ortak projelere açık.
         `, 'info');
