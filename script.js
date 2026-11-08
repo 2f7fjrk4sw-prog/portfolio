@@ -249,12 +249,15 @@ function initLiveTimeAndStatus() {
 }
 
 /* ==========================================================================
-   5. WEB AUDIO API LOFI SYNTHESIZER (Feature 1)
+   5. SPOTIFY ÇALAR & WEB AUDIO API LOFI SYNTHESIZER (Feature 1)
    ==========================================================================
    Açıklama:
-   Bu müzik motoru 0 byte harici dosya (MP3/WAV) kullanır. Tarayıcının
-   dahili ses sentezleyicisini (AudioContext) kullanarak matematiksel
-   frekanslardan nostaljik, analog bir lofi akor döngüsü üretir.
+   Kullanıcının isteğiyle entegre edilen bu modül iki seçenek sunar:
+   1. Baran'ın Seçilmiş Spotify Listesi: Resmi Spotify Embed iframe aracılığıyla
+      açılır; kullanıcılar listeyi çalabilir veya shuffle/karışık çalma modunda
+      dinleyebilir.
+   2. Web Audio API Sentezleyici (0 byte harici ses): Kullanıcı isterse analog
+      retro lofi synth moduna geçip tarayıcı içinde üretilen akorları dinleyebilir.
    ========================================================================== */
 let audioCtx = null;
 let isAudioPlaying = false;
@@ -262,11 +265,53 @@ let lofiTimer = null;
 let chordIndex = 0;
 
 function initLofiSynthesizer() {
-  const lofiWidget = document.getElementById('lofiWidget');
-  const toggleBtn = document.getElementById('lofiToggleBtn');
+  // DOM elementlerini hem yeni Spotify yapısı hem de geriye dönük uyumluluk için seçiyoruz
+  const musicWidget = document.getElementById('musicWidget') || document.getElementById('lofiWidget');
+  const toggleBtn = document.getElementById('musicToggleBtn') || document.getElementById('lofiToggleBtn');
+  const spotifyCard = document.getElementById('spotifyCard');
+  const spotifyCloseBtn = document.getElementById('spotifyCloseBtn');
+  const synthFallbackBtn = document.getElementById('synthFallbackBtn');
 
-  if (!lofiWidget || !toggleBtn) return;
+  if (!musicWidget || !toggleBtn) return;
 
+  // --------------------------------------------------------------------------
+  // A) SPOTIFY KARTI AÇILIR/KAPANIR ÇEKMECE YÖNETİMİ
+  // --------------------------------------------------------------------------
+  function openSpotifyDrawer() {
+    if (!spotifyCard) return;
+    spotifyCard.classList.add('open');
+    musicWidget.classList.add('open');
+    spotifyCard.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSpotifyDrawer() {
+    if (!spotifyCard) return;
+    spotifyCard.classList.remove('open');
+    musicWidget.classList.remove('open');
+    spotifyCard.setAttribute('aria-hidden', 'true');
+  }
+
+  function toggleSpotifyDrawer() {
+    if (!spotifyCard) return;
+    const isOpen = spotifyCard.classList.contains('open');
+    if (isOpen) {
+      closeSpotifyDrawer();
+    } else {
+      openSpotifyDrawer();
+    }
+  }
+
+  // Spotify kapatma butonu (X) tıklandığında kartı kapat
+  if (spotifyCloseBtn) {
+    spotifyCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSpotifyDrawer();
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // B) WEB AUDIO API LOFI SYNTHESIZER MOTORU (0 KB SES / ANALOG TINILAR)
+  // --------------------------------------------------------------------------
   // Lofi Müzik Akor Dizilimi (Frekanslar Hz cinsindendir):
   // Sırasıyla: Am7 -> Fmaj7 -> Cmaj7 -> G
   const chordProgression = [
@@ -345,13 +390,18 @@ function initLofiSynthesizer() {
     }
 
     isAudioPlaying = true;
-    lofiWidget.classList.add('playing'); // Ekolayzır animasyonunu çalıştır
+    musicWidget.classList.add('playing'); // Ekolayzır animasyonunu çalıştır
+    if (synthFallbackBtn) {
+      synthFallbackBtn.classList.add('active');
+      synthFallbackBtn.textContent = 'Synth Durdur ⏸';
+    }
 
     // İlk akoru hemen çal
     playChord(chordProgression[chordIndex]);
     chordIndex = (chordIndex + 1) % chordProgression.length;
 
-    // Her 2 saniyede bir sonraki akora geç ve sonsuz loop yap
+    // Her 2 saniyede bir sonraki akora geç ve sonsuz döngü kur
+    if (lofiTimer) clearInterval(lofiTimer);
     lofiTimer = setInterval(() => {
       playChord(chordProgression[chordIndex]);
       chordIndex = (chordIndex + 1) % chordProgression.length;
@@ -361,20 +411,68 @@ function initLofiSynthesizer() {
   // Müziği durduran fonksiyon
   function stopLofi() {
     isAudioPlaying = false;
-    lofiWidget.classList.remove('playing');
-    if (lofiTimer) clearInterval(lofiTimer);
+    musicWidget.classList.remove('playing');
+    if (synthFallbackBtn) {
+      synthFallbackBtn.classList.remove('active');
+      synthFallbackBtn.textContent = 'Lofi Synth Modu';
+    }
+    if (lofiTimer) {
+      clearInterval(lofiTimer);
+      lofiTimer = null;
+    }
   }
 
-  // Buton tıklamasıyla çal / durdur kontrolü
+  // Lofi synth tetikleme butonu (Drawer altındaki bağlantı)
+  if (synthFallbackBtn) {
+    synthFallbackBtn.addEventListener('click', () => {
+      if (isAudioPlaying) {
+        stopLofi();
+      } else {
+        startLofi();
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // C) ANA YÜZEN DÜĞME (MAIN PILL BUTTON) ETKİLEŞİMİ
+  // --------------------------------------------------------------------------
   toggleBtn.addEventListener('click', () => {
-    if (isAudioPlaying) {
-      stopLofi();
+    // Eğer Spotify kartı varsa çekmeceyi aç/kapat
+    if (spotifyCard) {
+      toggleSpotifyDrawer();
     } else {
-      startLofi();
+      // Yedek senaryo: Doğrudan lofi synth'i başlat/durdur
+      if (isAudioPlaying) {
+        stopLofi();
+      } else {
+        startLofi();
+      }
     }
   });
 
-  // Terminalden 'music' komutu girildiğinde çağrılabilmesi için global erişime aç
+  // Sayfa dışına tıklandığında Spotify çekmecesini otomatik kapat
+  document.addEventListener('click', (e) => {
+    if (spotifyCard && spotifyCard.classList.contains('open')) {
+      if (!musicWidget.contains(e.target)) {
+        closeSpotifyDrawer();
+      }
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // D) TERMİNAL & GLOBAL KÖPRÜLERİ (CLI ENTEGRASYONU)
+  // --------------------------------------------------------------------------
+  // Terminalden 'spotify' komutu girildiğinde:
+  window.toggleSpotifyFromTerminal = function() {
+    if (!spotifyCard) return 'Spotify kartı bulunamadı.';
+    toggleSpotifyDrawer();
+    const isOpen = spotifyCard.classList.contains('open');
+    return isOpen 
+      ? 'Baran\'ın Spotify listesi açıldı! (Rastgele / Shuffle çalabilirsiniz)' 
+      : 'Spotify listesi kapatıldı.';
+  };
+
+  // Terminalden 'lofi' komutu girildiğinde:
   window.toggleLofiFromTerminal = function() {
     if (isAudioPlaying) {
       stopLofi();
@@ -382,6 +480,15 @@ function initLofiSynthesizer() {
     } else {
       startLofi();
       return 'Lofi Synthesizer başlatıldı! (Web Audio API çalışıyor)';
+    }
+  };
+
+  // Terminalden genel 'music' komutu girildiğinde:
+  window.toggleMusicFromTerminal = function() {
+    if (spotifyCard) {
+      return window.toggleSpotifyFromTerminal();
+    } else {
+      return window.toggleLofiFromTerminal();
     }
   };
 }
@@ -781,7 +888,9 @@ Kullanılabilir Komutlar:
   <strong>skills</strong>    - Uzmanlık alanları ve teknolojiler
   <strong>projects</strong>  - Öne çıkan projeler ve bağlantılar
   <strong>contact</strong>   - E-posta ve sosyal profil linkleri
-  <strong>music</strong>     - Lofi Synthesizer müziğini aç / kapat
+  <strong>spotify</strong>   - Baran'ın Spotify listesini aç / kapat
+  <strong>music</strong>     - Müzik çalar çekmecesini aç / kapat
+  <strong>lofi</strong>      - Web Audio API Lofi Synthesizer müziği
   <strong>gravity</strong>   - 2D Fizik simülasyonunu başlat
   <strong>matrix</strong>    - Matrix veri yağmuru efektini çalıştır
   <strong>clear</strong>     - Terminal ekranını temizle
@@ -824,13 +933,33 @@ Durum:   Staj ve ortak projelere açık.
         `, 'info');
         break;
 
+      case 'spotify':
+        if (window.toggleSpotifyFromTerminal) {
+          const res = window.toggleSpotifyFromTerminal();
+          appendLine(res, 'cyan');
+        } else {
+          appendLine('Spotify bileşeni henüz hazır değil.', 'error');
+        }
+        break;
+
       case 'music':
+        if (window.toggleMusicFromTerminal) {
+          const res = window.toggleMusicFromTerminal();
+          appendLine(res, 'cyan');
+        } else if (window.toggleLofiFromTerminal) {
+          const res = window.toggleLofiFromTerminal();
+          appendLine(res, 'cyan');
+        } else {
+          appendLine('Müzik motoru henüz yüklenmedi.', 'error');
+        }
+        break;
+
       case 'lofi':
         if (window.toggleLofiFromTerminal) {
           const res = window.toggleLofiFromTerminal();
           appendLine(res, 'cyan');
         } else {
-          appendLine('Müzik motoru henüz yüklenmedi.', 'error');
+          appendLine('Web Audio API sentezleyici henüz yüklenmedi.', 'error');
         }
         break;
 

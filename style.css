@@ -1242,15 +1242,153 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   9. LOFI SYNTHESIZER SES ÇALAR WIDGET'I (Feature 1)
+   9. SPOTIFY & SES ÇALAR WIDGET'I (Feature 1 - Spotify + Web Audio API)
+   --------------------------------------------------------------------------
+   Açıklama:
+   Kullanıcının isteği üzerine Baran'ın kişisel Spotify listesini ve Web Audio
+   API tabanlı lofi sentezleyiciyi barındıran yüzen (floating) müzik çalar bileşeni.
    -------------------------------------------------------------------------- */
+.music-player-widget,
 .lofi-player-widget {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
   z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
+/* Spotify Açılır Kartı (Pop-up Drawer) */
+.spotify-card {
+  width: 350px;
+  max-width: calc(100vw - 2.5rem);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.85rem;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(14px) scale(0.96);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s;
+}
+
+.spotify-card.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.spotify-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.spotify-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spotify-brand svg {
+  flex-shrink: 0;
+}
+
+.spotify-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.spotify-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.spotify-close-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-surface-soft);
+}
+
+.spotify-iframe-wrap {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #121212;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.spotify-iframe-wrap iframe {
+  display: block;
+}
+
+.spotify-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.65rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.spotify-hint {
+  font-size: 0.72rem;
+  color: #1db954;
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.spotify-hint::before {
+  content: "🔀";
+  font-size: 0.75rem;
+}
+
+.synth-toggle-link {
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
+}
+
+.synth-toggle-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.synth-toggle-link.active {
+  color: #ffffff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Yüzen Müzik Düğmesi (Pill) */
+.music-main-btn,
 .lofi-main-btn {
   display: flex;
   align-items: center;
@@ -1267,18 +1405,20 @@ body {
   transition: all var(--transition-fast);
 }
 
+.music-main-btn:hover,
 .lofi-main-btn:hover {
-  border-color: var(--accent);
+  border-color: #1db954;
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 35px rgba(29, 185, 84, 0.25);
 }
 
+.music-icon-box,
 .lofi-icon-box {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: rgba(29, 185, 84, 0.15);
+  color: #1db954;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1286,27 +1426,32 @@ body {
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
+.music-player-widget.open .music-icon-box,
+.music-player-widget.playing .music-icon-box,
 .lofi-player-widget.playing .lofi-icon-box {
-  background: var(--accent);
-  color: #ffffff;
+  background: #1db954;
+  color: #0b0d10;
 }
 
 .lofi-pause-icon { display: none; }
 .lofi-player-widget.playing .lofi-play-icon { display: none; }
 .lofi-player-widget.playing .lofi-pause-icon { display: block; }
 
+.music-info,
 .lofi-info {
   display: flex;
   flex-direction: column;
   text-align: left;
 }
 
+.music-title,
 .lofi-title {
   font-size: 0.85rem;
   font-weight: 600;
   line-height: 1.2;
 }
 
+.music-subtitle,
 .lofi-subtitle {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -1330,14 +1475,27 @@ body {
   transition: height 0.2s ease, background-color 0.2s ease;
 }
 
+.music-player-widget.playing .eq-bar,
+.music-player-widget.open .eq-bar,
 .lofi-player-widget.playing .eq-bar {
-  background: var(--accent);
+  background: #1db954;
   animation: eq-bounce 0.8s ease-in-out infinite alternate;
 }
 
+.music-player-widget.playing .eq-bar:nth-child(1),
+.music-player-widget.open .eq-bar:nth-child(1),
 .lofi-player-widget.playing .eq-bar:nth-child(1) { animation-delay: 0.1s; height: 12px; }
+
+.music-player-widget.playing .eq-bar:nth-child(2),
+.music-player-widget.open .eq-bar:nth-child(2),
 .lofi-player-widget.playing .eq-bar:nth-child(2) { animation-delay: 0.3s; height: 16px; }
+
+.music-player-widget.playing .eq-bar:nth-child(3),
+.music-player-widget.open .eq-bar:nth-child(3),
 .lofi-player-widget.playing .eq-bar:nth-child(3) { animation-delay: 0.2s; height: 10px; }
+
+.music-player-widget.playing .eq-bar:nth-child(4),
+.music-player-widget.open .eq-bar:nth-child(4),
 .lofi-player-widget.playing .eq-bar:nth-child(4) { animation-delay: 0.4s; height: 14px; }
 
 @keyframes eq-bounce {
@@ -1727,6 +1885,7 @@ body {
     justify-content: center;
   }
 
+  .music-player-widget,
   .lofi-player-widget {
     bottom: 1rem;
     right: 1rem;
