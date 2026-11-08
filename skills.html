@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yetkinlikler — Baran Deniz Mutluoğlu</title>
+  <meta name="description" content="Baran Deniz Mutluoğlu — C#, .NET, Unity, SQL, Web Teknolojileri ve Mühendislik Pratikleri.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand-logo" aria-label="Ana sayfa">
+        <span class="brand-monogram">BM</span>
+        <span class="brand-name">Baran Deniz Mutluoğlu</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Ana Menü">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+          <li><a href="about.html" class="nav-link">Hakkımda</a></li>
+          <li><a href="projects.html" class="nav-link">Projeler</a></li>
+          <li><a href="skills.html" class="nav-link active">Yetkinlikler</a></li>
+          <li><a href="contact.html" class="nav-link">İletişim</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Tema değiştir" title="Tema Değiştir">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button id="mobileMenuBtn" class="icon-button mobile-only" type="button" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">// 03. Teknik Yetkinlikler & Araçlar</span>
+          <h1 class="section-title">Yetkinlikler & Yaklaşım</h1>
+          <p class="section-subtitle">Yapay yüzdelik çubukları yerine gerçek hayatta ve projelerimde kullandığım araçlar ve mühendislik prensipleri.</p>
+        </div>
+
+        <div class="stack-grid">
+          <!-- Category 1 -->
+          <div class="stack-category">
+            <div class="category-header">
+              <span class="cat-icon">&#x203A;</span>
+              <h2 class="cat-title">Programlama Dilleri</h2>
+            </div>
+            <ul class="stack-items">
+              <li class="stack-item">
+                <div class="item-name">C#</div>
+                <div class="item-desc">Nesne yönelimli programlama (OOP), tip güvenliği, LINQ, bellek yönetimi ve algoritmik problem çözme.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">JavaScript (ES6+)</div>
+                <div class="item-desc">Modern JS standartları, asenkron akışlar (Promises, Async/Await), DOM manipülasyonu.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">SQL</div>
+                <div class="item-desc">İlişkisel veritabanı tasarımı, normalizasyon, CRUD işlemleri ve veri bütünlüğü.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">HTML5 & CSS3</div>
+                <div class="item-desc">Anlamsal semantik etiketleme, modern Flexbox & Grid yerleşimleri, responsive arayüzler.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 2 -->
+          <div class="stack-category">
+            <div class="category-header">
+              <span class="cat-icon">&#x203A;</span>
+              <h2 class="cat-title">Oyun & Platformlar</h2>
+            </div>
+            <ul class="stack-items">
+              <li class="stack-item">
+                <div class="item-name">Unity Engine (Orta Seviye)</div>
+                <div class="item-desc">C# script mimarisi, 2D/3D mekanikler, fizik motoru, sahne optimizasyonu ve UI Canvas tasarımı.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">.NET & .NET Core</div>
+                <div class="item-desc">Konsol sistem araçları, ASP.NET Core Web API temelleri, çoklu platform desteği.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">Node.js</div>
+                <div class="item-desc">İstemci/sunucu mimarisi, REST servisleri, JSON veri akışları ve npm yönetimi.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">Git & Versiyon Kontrol</div>
+                <div class="item-desc">Branching modelleri, commit disiplini, GitHub iş akışları ve takım çalışmaları.</div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 3 -->
+          <div class="stack-category">
+            <div class="category-header">
+              <span class="cat-icon">&#x203A;</span>
+              <h2 class="cat-title">Mühendislik Pratikleri</h2>
+            </div>
+            <ul class="stack-items">
+              <li class="stack-item">
+                <div class="item-name">Temiz Kod (Clean Code)</div>
+                <div class="item-desc">Kendini açıklayan isimlendirmeler, modüler fonksiyonlar ve tek sorumluluk prensibi.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">Defansif Programlama</div>
+                <div class="item-desc">Uç durumlar, beklenmeyen girdiler ve tip uyumsuzluklarına karşı dayanıklı kod tasarımı.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">YAGNI & KISS İlkeleri</div>
+                <div class="item-desc">Gereksiz soyutlamalardan ve erken optimizasyon tuzaklarından kaçınarak yalın kalma.</div>
+              </li>
+              <li class="stack-item">
+                <div class="item-name">Hafif Siklet Tasarım</div>
+                <div class="item-desc">Gereksiz devasa paketler yerine saf web standartlarını kullanarak yüksek hız ve verimlilik.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <p class="footer-copy">&copy; 2026 Baran Deniz Mutluoğlu.</p>
+        <p class="footer-subtext">Sıfır kütüphane şişkinliği, anlamsal HTML5 ve saf CSS ile hazırlandı.</p>
+      </div>
+
+      <div class="footer-right">
+        <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="back-to-top">
+          <span>GitHub Profilim</span>
+          <span class="external-icon">&#x2197;</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

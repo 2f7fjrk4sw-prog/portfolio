@@ -115,7 +115,12 @@ function initScrollSpy() {
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('section[id]');
 
-  if (!sections.length || !navLinks.length) return;
+  const hashNavLinks = Array.from(navLinks).filter((link) => {
+    const href = link.getAttribute('href');
+    return href && href.startsWith('#');
+  });
+
+  if (!sections.length || !hashNavLinks.length) return;
 
   const observerOptions = {
     root: null,
@@ -127,7 +132,7 @@ function initScrollSpy() {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const id = entry.target.getAttribute('id');
-        navLinks.forEach((link) => {
+        hashNavLinks.forEach((link) => {
           const href = link.getAttribute('href');
           if (href === `#${id}`) {
             link.classList.add('active');

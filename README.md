@@ -36,9 +36,13 @@ Piyasadaki standart, yapay zeka tarafından üretilmiş kopya portfolyolardan (n
 
 ```bash
 portfolio/
-├── index.html        # Semantik HTML5 iskeleti ve erişilebilir sayfa yapısı
+├── index.html        # Ana Sayfa: Tanıtım, genel bakış ve sayfa yönlendirmeleri
+├── about.html        # Hakkımda: Akademik geçmiş, eğitim ve yazılım felsefesi
+├── projects.html     # Projeler: Web platformları, C# konsol ve Unity projeleri
+├── skills.html       # Yetkinlikler: C#, .NET, Unity, SQL, Web ve mühendislik pratikleri
+├── contact.html      # İletişim: Doğrudan e-posta, GitHub ve sosyal bağlantılar
 ├── style.css         # CSS Custom Properties, grid sistemi, fluid tipografi & temalar
-├── script.js         # Tema yöneticisi, clipboard etkileşimi, scrollspy & mobil menü
+├── script.js         # Tema yöneticisi, clipboard etkileşimi & mobil menü
 └── README.md         # Proje mimari ve teknik dökümantasyonu
 ```
 

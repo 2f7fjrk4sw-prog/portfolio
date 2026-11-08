@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baran Deniz Mutluoğlu — Yazılım Geliştirici & Portfolyo</title>
-  <meta name="description" content="Baran Deniz Mutluoğlu — C#, .NET ve modern web teknolojileri odaklı yazılım geliştirici portfolyosu.">
+  <title>Baran Deniz Mutluoğlu — Yazılım Geliştirici</title>
+  <meta name="description" content="Baran Deniz Mutluoğlu — C#, .NET, Unity ve modern web teknolojileri odaklı yazılım geliştirici kişisel portfolyosu.">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,17 +21,18 @@
   <!-- Header / Navigation -->
   <header class="site-header">
     <div class="container nav-inner">
-      <a href="#hero" class="brand-logo" aria-label="Ana sayfa">
+      <a href="index.html" class="brand-logo" aria-label="Ana sayfa">
         <span class="brand-monogram">BM</span>
         <span class="brand-name">Baran Deniz Mutluoğlu</span>
       </a>
 
       <nav class="main-nav" aria-label="Ana Menü">
         <ul class="nav-links">
-          <li><a href="#about" class="nav-link">Hakkımda</a></li>
-          <li><a href="#projects" class="nav-link">Projeler</a></li>
-          <li><a href="#stack" class="nav-link">Teknolojiler</a></li>
-          <li><a href="#contact" class="nav-link">İletişim</a></li>
+          <li><a href="index.html" class="nav-link active">Ana Sayfa</a></li>
+          <li><a href="about.html" class="nav-link">Hakkımda</a></li>
+          <li><a href="projects.html" class="nav-link">Projeler</a></li>
+          <li><a href="skills.html" class="nav-link">Yetkinlikler</a></li>
+          <li><a href="contact.html" class="nav-link">İletişim</a></li>
         </ul>
       </nav>
 
@@ -64,473 +65,76 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section id="hero" class="section hero-section">
+    <!-- Home / Hero Section -->
+    <section class="section home-hero">
       <div class="container hero-container">
         <!-- Status Indicator -->
         <div class="status-badge" role="status">
           <span class="status-dot"></span>
-          <span class="status-text">Staj & Proje Fırsatlarına Açık</span>
+          <span class="status-text">OSTİM Teknik Üniv. • Yazılım Mühendisliği (2. Sınıf)</span>
         </div>
 
         <h1 class="hero-title">
-          Performanslı mimariler ve <br class="hidden-mobile">
-          <span class="text-contrast">temiz kod odaklı</span> yazılımlar geliştiriyorum.
+          Baran Deniz Mutluoğlu
         </h1>
 
-        <p class="hero-description">
-          Merhaba, ben <strong>Baran Deniz Mutluoğlu</strong>. OSTİM Teknik Üniversitesi Yazılım Mühendisliği 2. sınıf öğrencisiyim. C#, .NET ekosistemi, Unity ile oyun geliştirme ve modern web teknolojileri üzerinde çalışıyorum. Gereksiz kütüphane şişkinliği yerine sağlam temellere, anlamsal kod yapısına ve kullanıcı deneyimine odaklanırım.
-        </p>
+        <div class="hero-subtitle-tag">
+          <span>C#</span> <span class="dot-sep">•</span>
+          <span>.NET</span> <span class="dot-sep">•</span>
+          <span>Unity Engine</span> <span class="dot-sep">•</span>
+          <span>Modern Web</span>
+        </div>
 
-        <div class="hero-cta-group">
-          <a href="#projects" class="btn btn-primary">
-            <span>Seçilmiş Projeler</span>
-            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
-              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
+        <!-- Custom User Introduction Box -->
+        <div class="user-intro-card">
+          <div class="intro-card-header">
+            <span class="intro-label">// Geliştirici Notu</span>
+          </div>
+          <div class="intro-card-content">
+            <!-- BURAYA KULLANICININ YAZACAĞI YAZI GELECEK -->
+            <p class="user-custom-text">
+              Merhaba, ben Baran Deniz Mutluoğlu. OSTİM Teknik Üniversitesi Yazılım Mühendisliği 2. sınıf öğrencisiyim. C# ve .NET mimarileri, Unity ile oyun geliştirme ve modern web teknolojileri üzerine odaklanıyorum.
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Access Page Grid -->
+        <div class="page-quick-links">
+          <a href="projects.html" class="quick-card">
+            <div class="quick-card-top">
+              <span class="quick-num">01</span>
+              <span class="quick-arrow">&#x2192;</span>
+            </div>
+            <h2 class="quick-title">Projeler</h2>
+            <p class="quick-desc">Geliştirdiğim web platformları, C# algoritmik sistemleri ve oyun projeleri.</p>
           </a>
-          <a href="#contact" class="btn btn-secondary">İletişime Geç</a>
-          <button class="btn btn-ghost" id="copyEmailBtn" type="button" data-email="baran.mutluoglu@example.com">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-            <span class="copy-text">E-postayı Kopyala</span>
-          </button>
-        </div>
 
-        <!-- Quick Meta Info -->
-        <div class="hero-meta">
-          <div class="meta-item">
-            <span class="meta-label">Eğitim</span>
-            <span class="meta-value">OSTİM Teknik Üniv. • 2. Sınıf</span>
-          </div>
-          <div class="meta-divider" aria-hidden="true">/</div>
-          <div class="meta-item">
-            <span class="meta-label">Odak</span>
-            <span class="meta-value">Backend, Unity & Web</span>
-          </div>
-          <div class="meta-divider" aria-hidden="true">/</div>
-          <div class="meta-item">
-            <span class="meta-label">Temel Araçlar</span>
-            <span class="meta-value">C#, .NET, Unity, JS, SQL</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">// 01. Hakkımda</span>
-          <h2 class="section-title">Yazılıma yaklaşımım ve arka planım</h2>
-        </div>
-
-        <div class="about-grid">
-          <div class="about-text">
-            <p>
-              Yazılım dünyasında kalıcı olan şeyin trendler değil, sağlam mühendislik prensipleri olduğuna inanıyorum. Kod yazarken yalnızca "çalışmasını" sağlamakla yetinmeyip; kodun okunabilirliği, bellek verimliliği ve bakım kolaylığı gibi faktörleri ilk satırdan itibaren gözetiyorum.
-            </p>
-            <p>
-              Akademik ve kişisel çalışmalarımda özellikle nesne yönelimli programlama (OOP), algoritmik düşünme, veri yapıları ve modern istemci/sunucu mimarileri üzerine yoğunlaşıyorum. Bir framework veya kütüphaneyi kullanmadan önce her zaman onun arkasındaki çalışma mekanizmasını anlamayı hedeflerim.
-            </p>
-            
-            <div class="principles-list">
-              <div class="principle-card">
-                <span class="principle-num">01</span>
-                <div>
-                  <h3 class="principle-title">Gereksiz Bağımlılıklardan Kaçınma</h3>
-                  <p class="principle-desc">Saf ve anlamsal çözümler üretilebildiği sürece devasa paketler yerine yalın mimariyi tercih ederim.</p>
-                </div>
-              </div>
-
-              <div class="principle-card">
-                <span class="principle-num">02</span>
-                <div>
-                  <h3 class="principle-title">Şeffaf & Okunabilir Kod</h3>
-                  <p class="principle-desc">Karmaşık sözdizimleri yerine takım arkadaşlarının ve gelecekteki benim rahatça anlayabileceği net yapılar kurarım.</p>
-                </div>
-              </div>
-
-              <div class="principle-card">
-                <span class="principle-num">03</span>
-                <div>
-                  <h3 class="principle-title">Sürekli Ölçülebilir Gelişim</h3>
-                  <p class="principle-desc">Her projede yeni bir teknik zorluğu çözmeyi ve mimari kararların arkasındaki gerekçeleri belgelemeyi ilke edinirim.</p>
-                </div>
-              </div>
+          <a href="skills.html" class="quick-card">
+            <div class="quick-card-top">
+              <span class="quick-num">02</span>
+              <span class="quick-arrow">&#x2192;</span>
             </div>
-          </div>
+            <h2 class="quick-title">Yetkinlikler</h2>
+            <p class="quick-desc">C#, .NET, Unity (orta seviye), SQL, web teknolojileri ve mühendislik pratikleri.</p>
+          </a>
 
-          <aside class="about-sidebar">
-            <div class="profile-card">
-              <div class="profile-card-header">
-                <div class="terminal-dots">
-                  <span></span><span></span><span></span>
-                </div>
-                <span class="terminal-title">developer_spec.json</span>
-              </div>
-              <div class="profile-card-body">
-                <pre class="code-block"><code>{
-  <span class="c-key">"name"</span>: <span class="c-val">"Baran Deniz Mutluoğlu"</span>,
-  <span class="c-key">"role"</span>: <span class="c-val">"Software Engineering Student"</span>,
-  <span class="c-key">"university"</span>: <span class="c-val">"OSTİM Teknik Üniversitesi"</span>,
-  <span class="c-key">"grade"</span>: <span class="c-val">"2. Sınıf (Sophomore)"</span>,
-  <span class="c-key">"primary_stack"</span>: [
-    <span class="c-val">"C#"</span>,
-    <span class="c-val">".NET"</span>,
-    <span class="c-val">"Unity"</span>,
-    <span class="c-val">"JavaScript"</span>,
-    <span class="c-val">"SQL"</span>
-  ],
-  <span class="c-key">"current_focus"</span>: <span class="c-val">"High-performance backends, game dev & clean interfaces"</span>,
-  <span class="c-key">"open_to"</span>: <span class="c-val">"Internships & Collaborative Projects"</span>
-}</code></pre>
-              </div>
+          <a href="about.html" class="quick-card">
+            <div class="quick-card-top">
+              <span class="quick-num">03</span>
+              <span class="quick-arrow">&#x2192;</span>
             </div>
-          </aside>
-        </div>
-      </div>
-    </section>
+            <h2 class="quick-title">Hakkımda</h2>
+            <p class="quick-desc">Akademik geçmişim, yazılıma yaklaşımım ve geliştirici profilim.</p>
+          </a>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">// 02. Seçilmiş Projeler</span>
-          <h2 class="section-title">Üzerinde çalıştığım ve inşa ettiğim işler</h2>
-          <p class="section-subtitle">Pazarlama süsü yerine mimari kararlarını, çözülen problemleri ve kullanılan teknikleri içeren gerçek projeler.</p>
-        </div>
-
-        <div class="projects-list">
-          <!-- Project 1 -->
-          <article class="project-card">
-            <div class="project-content">
-              <div class="project-top">
-                <span class="project-year">2026</span>
-                <span class="project-badge">Web Platformu</span>
-              </div>
-              <h3 class="project-title">Oyun Haberleri & İçerik Platformu</h3>
-              <p class="project-summary">
-                Oyun dünyasındaki güncel gelişmeleri, filtreli inceleme sistemini ve dinamik içerik akışını barındıran, sıfır frontend kütüphanesi ile saf web teknolojileri kullanılarak geliştirilmiş responsive platform.
-              </p>
-              
-              <div class="project-highlights">
-                <h4>Öne Çıkan Mimari Çözümler:</h4>
-                <ul>
-                  <li>Vanilla JS ile modüler bileşen yönetimi ve durum (state) senkronizasyonu.</li>
-                  <li>Kategoriye ve çıkış tarihine göre istemci taraflı anlık filtreleme ve arama mimarisi.</li>
-                  <li>CSS Grid ve Flexbox ile tam responsive, yüksek performanslı sayfa yerleşimi.</li>
-                </ul>
-              </div>
-
-              <div class="project-tech-tags">
-                <span class="tag">HTML5 / Semantic</span>
-                <span class="tag">Modern CSS</span>
-                <span class="tag">Vanilla JS</span>
-                <span class="tag">Node.js</span>
-                <span class="tag">Responsive Design</span>
-              </div>
-
-              <div class="project-links">
-                <a href="#" class="btn-link" target="_blank" rel="noopener">
-                  <span>Detayları İncele</span>
-                  <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
-                </a>
-                <a href="#" class="btn-link muted" target="_blank" rel="noopener">
-                  <span>GitHub</span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-              </div>
+          <a href="contact.html" class="quick-card">
+            <div class="quick-card-top">
+              <span class="quick-num">04</span>
+              <span class="quick-arrow">&#x2192;</span>
             </div>
-
-            <div class="project-visual">
-              <div class="mockup-frame">
-                <div class="mockup-bar">
-                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                  <span class="mockup-url">localhost:3000/games</span>
-                </div>
-                <div class="mockup-content mockup-web-preview">
-                  <div class="preview-header">
-                    <span class="preview-chip">Oyun Haberleri</span>
-                    <span class="preview-date">Canlı Akış</span>
-                  </div>
-                  <div class="preview-cards">
-                    <div class="preview-mini-card">
-                      <div class="mini-tag">İnceleme</div>
-                      <div class="mini-title">Yeni Nesil RPG Dinamikleri</div>
-                    </div>
-                    <div class="preview-mini-card">
-                      <div class="mini-tag">Duyuru</div>
-                      <div class="mini-title">Unreal Engine 5.4 Güncellemesi</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Project 2 -->
-          <article class="project-card">
-            <div class="project-content">
-              <div class="project-top">
-                <span class="project-year">2026</span>
-                <span class="project-badge">C# / Algoritma</span>
-              </div>
-              <h3 class="project-title">C# Algoritmik Konsol & Veri İşleme Paketi</h3>
-              <p class="project-summary">
-                Önceden tanımlı kütüphane sıralamaları ve koleksiyon kısayolları kullanılmadan; saf döngü, işaretçi simülasyonu ve geçici değişken mantıklarıyla inşa edilmiş algoritmik hesaplama ve veri modelleme paketi.
-              </p>
-              
-              <div class="project-highlights">
-                <h4>Öne Çıkan Mimari Çözümler:</h4>
-                <ul>
-                  <li>Dizi metotlarına başvurmadan <code>temp</code> değişkenleri ve koşullu mantıkla asgari bellek kullanımı.</li>
-                  <li>Dinamik kullanıcı girdisi doğrulama ve veri tutarlılık kontrolleri (-1 stop flag mekanizması).</li>
-                  <li>İki boyutlu koordinat matrisleri üzerinde alternatif simge desenleri oluşturma.</li>
-                </ul>
-              </div>
-
-              <div class="project-tech-tags">
-                <span class="tag">C#</span>
-                <span class="tag">.NET 10</span>
-                <span class="tag">Algoritmalar</span>
-                <span class="tag">Veri Doğrulama</span>
-                <span class="tag">Konsol Mimarisi</span>
-              </div>
-
-              <div class="project-links">
-                <a href="#" class="btn-link" target="_blank" rel="noopener">
-                  <span>Modülleri İncele</span>
-                  <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path></svg>
-                </a>
-                <a href="#" class="btn-link muted" target="_blank" rel="noopener">
-                  <span>GitHub</span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-              </div>
-            </div>
-
-            <div class="project-visual">
-              <div class="mockup-frame">
-                <div class="mockup-bar">
-                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                  <span class="mockup-url">dotnet run --project Q1</span>
-                </div>
-                <div class="mockup-content mockup-terminal-preview">
-                  <div class="terminal-line"><span class="t-prompt">$</span> dotnet run</div>
-                  <div class="terminal-line t-out">Enter exam scores (enter -1 to stop):</div>
-                  <div class="terminal-line t-in">&gt; 85, 92, 45, 78, -1</div>
-                  <div class="terminal-line t-res">=== Exam Score Summary ===</div>
-                  <div class="terminal-line t-res">Total Valid: 4 | Passed: 3 | Avg: 75.00</div>
-                  <div class="terminal-line t-prompt">$ <span class="cursor-blink">_</span></div>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Project 3 -->
-          <article class="project-card">
-            <div class="project-content">
-              <div class="project-top">
-                <span class="project-year">2026</span>
-                <span class="project-badge">Arayüz & Tasarım Sistemi</span>
-              </div>
-              <h3 class="project-title">Hafif Siklet Kişisel Portfolyo Sistemi</h3>
-              <p class="project-summary">
-                Harici CSS kütüphaneleri veya JavaScript framework yükü olmadan; CSS Custom Properties, anlamsal HTML5 ve modern erişilebilirlik (A11y) standartlarıyla sıfırdan inşa edilmiş minimalist web portfolyosu.
-              </p>
-              
-              <div class="project-highlights">
-                <h4>Öne Çıkan Mimari Çözümler:</h4>
-                <ul>
-                  <li>100/100 Lighthouse hedefli, sıfır kütüphane şişkinliği ve hızlı ilk bayt süresi (TTFB).</li>
-                  <li>Kullanıcının sistem tercihini (Dark/Light) dinleyen ve <code>localStorage</code> ile saklanan tema motoru.</li>
-                  <li>Akıcı tipografi (fluid typography) ile her ekran genişliğine kusursuz uyum.</li>
-                </ul>
-              </div>
-
-              <div class="project-tech-tags">
-                <span class="tag">HTML5</span>
-                <span class="tag">Vanilla CSS</span>
-                <span class="tag">Modern JS</span>
-                <span class="tag">Erişilebilirlik (A11y)</span>
-                <span class="tag">Performans</span>
-              </div>
-
-              <div class="project-links">
-                <a href="#hero" class="btn-link">
-                  <span>Sayfayı Deneyimle</span>
-                  <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
-                </a>
-              </div>
-            </div>
-
-            <div class="project-visual">
-              <div class="mockup-frame">
-                <div class="mockup-bar">
-                  <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                  <span class="mockup-url">lighthouse-audit.report</span>
-                </div>
-                <div class="mockup-content mockup-scores-preview">
-                  <div class="score-circle">
-                    <span class="score-val">100</span>
-                    <span class="score-lbl">Performans</span>
-                  </div>
-                  <div class="score-circle">
-                    <span class="score-val">100</span>
-                    <span class="score-lbl">Erişilebilirlik</span>
-                  </div>
-                  <div class="score-circle">
-                    <span class="score-val">100</span>
-                    <span class="score-lbl">SEO</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Stack & Methodology -->
-    <section id="stack" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">// 03. Teknolojiler & Yetkinlikler</span>
-          <h2 class="section-title">Kullandığım araçlar ve teknik çalışma alanı</h2>
-          <p class="section-subtitle">Yapay yüzdelik çubukları yerine gerçek hayatta kullandığım ve uzmanlaşmaya devam ettiğim teknolojiler.</p>
-        </div>
-
-        <div class="stack-grid">
-          <div class="stack-category">
-            <div class="category-header">
-              <span class="cat-icon">&#x203A;</span>
-              <h3 class="cat-title">Programlama Dilleri & Çekirdek</h3>
-            </div>
-            <ul class="stack-items">
-              <li class="stack-item">
-                <div class="item-name">C#</div>
-                <div class="item-desc">OOP, Unity script mimarisi, .NET ekosistemi, LINQ, bellek yönetimi ve algoritmalar.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">JavaScript (ES6+)</div>
-                <div class="item-desc">Asenkron programlama, DOM manipülasyonu, modüler yapı.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">SQL</div>
-                <div class="item-desc">İlişkisel veritabanı modelleme, sorgu optimizasyonu, CRUD.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">HTML5 & CSS3</div>
-                <div class="item-desc">Semantik etiketler, modern yerleşimler (Grid/Flexbox), fluid UI.</div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="stack-category">
-            <div class="category-header">
-              <span class="cat-icon">&#x203A;</span>
-              <h3 class="cat-title">Platformlar & Çatılar</h3>
-            </div>
-            <ul class="stack-items">
-              <li class="stack-item">
-                <div class="item-name">Unity Engine (Orta Seviye)</div>
-                <div class="item-desc">C# tabanlı 2D/3D oyun mekanikleri, fizik sistemleri, sahne optimizasyonu ve UI tasarımı.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">.NET & .NET Core</div>
-                <div class="item-desc">Konsol araçları, ASP.NET Core Web API temelleri.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Node.js</div>
-                <div class="item-desc">İstemci/sunucu mimarisi, REST servisleri, paket ekosistemi.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Git & Versiyon Kontrol</div>
-                <div class="item-desc">Branching modelleri, commit disiplini, GitHub iş akışları.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Geliştirme Araçları</div>
-                <div class="item-desc">Visual Studio, VS Code, PowerShell & Bash terminal hakimiyeti.</div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="stack-category">
-            <div class="category-header">
-              <span class="cat-icon">&#x203A;</span>
-              <h3 class="cat-title">Mühendislik Pratikleri</h3>
-            </div>
-            <ul class="stack-items">
-              <li class="stack-item">
-                <div class="item-name">Temiz Kod (Clean Code)</div>
-                <div class="item-desc">Kendini açıklayan isimlendirmeler ve tek sorumluluk prensibi.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Hata Yönetimi & Dayanıklılık</div>
-                <div class="item-desc">Beklenmeyen kullanıcı girdilerine ve uç durumlara karşı defansif kodlama.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Yalınlık İlkesi (YAGNI & KISS)</div>
-                <div class="item-desc">İhtiyaç duyulmayan aşırı karmaşık soyutlamalardan kaçınma.</div>
-              </li>
-              <li class="stack-item">
-                <div class="item-name">Erişilebilirlik & Uyumluluk</div>
-                <div class="item-desc">Klavyeyle gezinilebilirlik, kontrast standartları ve hızlı yüklenme.</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-      <div class="container contact-container">
-        <div class="contact-box">
-          <div class="contact-header">
-            <span class="section-tag">// 04. İletişim</span>
-            <h2 class="contact-title">Birlikte yeni bir şeyler inşa edelim.</h2>
-            <p class="contact-desc">
-              Projeler, staj olanakları veya sadece yazılım mimarileri üzerine sohbet etmek için bana her zaman doğrudan ulaşabilirsin.
-            </p>
-          </div>
-
-          <div class="contact-methods">
-            <a href="mailto:barandenizmutluoglu@gmail.com" class="contact-card primary-contact">
-              <div class="contact-icon-wrapper">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-              </div>
-              <div class="contact-detail">
-                <span class="contact-label">Doğrudan E-posta</span>
-                <span class="contact-address">barandenizmutluoglu@gmail.com</span>
-              </div>
-              <span class="contact-arrow">&#x2192;</span>
-            </a>
-
-            <div class="social-links-grid">
-              <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="social-card">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-                <span>GitHub Profilim</span>
-                <span class="external-icon">&#x2197;</span>
-              </a>
-
-              <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-card">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-                <span>LinkedIn Ağım</span>
-                <span class="external-icon">&#x2197;</span>
-              </a>
-            </div>
-          </div>
+            <h2 class="quick-title">İletişim</h2>
+            <p class="quick-desc">Doğrudan e-posta, GitHub ve profesyonel ağ bağlantıları.</p>
+          </a>
         </div>
       </div>
     </section>
@@ -540,27 +144,18 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-left">
-        <p class="footer-copy">
-          &copy; 2026 Baran Deniz Mutluoğlu.
-        </p>
-        <p class="footer-subtext">
-          Sıfır kütüphane şişkinliği, anlamsal HTML5 ve saf CSS ile el işçiliğiyle hazırlandı.
-        </p>
+        <p class="footer-copy">&copy; 2026 Baran Deniz Mutluoğlu.</p>
+        <p class="footer-subtext">Sıfır kütüphane şişkinliği, anlamsal HTML5 ve saf CSS ile hazırlandı.</p>
       </div>
 
       <div class="footer-right">
-        <a href="#hero" class="back-to-top" aria-label="Sayfanın başına dön">
-          <span>Başa Dön</span>
-          <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
-            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
-          </svg>
+        <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="back-to-top">
+          <span>GitHub Profilim</span>
+          <span class="external-icon">&#x2197;</span>
         </a>
       </div>
     </div>
   </footer>
-
-  <!-- Toast Notification (for copy events) -->
-  <div id="toast" class="toast" role="alert" aria-live="polite">E-posta adresi panoya kopyalandı!</div>
 
   <script src="script.js"></script>
 </body>

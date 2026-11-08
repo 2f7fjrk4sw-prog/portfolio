@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hakkımda — Baran Deniz Mutluoğlu</title>
+  <meta name="description" content="Baran Deniz Mutluoğlu — Akademik arka plan, yazılım felsefesi ve geliştirici profili.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand-logo" aria-label="Ana sayfa">
+        <span class="brand-monogram">BM</span>
+        <span class="brand-name">Baran Deniz Mutluoğlu</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Ana Menü">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+          <li><a href="about.html" class="nav-link active">Hakkımda</a></li>
+          <li><a href="projects.html" class="nav-link">Projeler</a></li>
+          <li><a href="skills.html" class="nav-link">Yetkinlikler</a></li>
+          <li><a href="contact.html" class="nav-link">İletişim</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Tema değiştir" title="Tema Değiştir">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <button id="mobileMenuBtn" class="icon-button mobile-only" type="button" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">// 01. Profil & Arka Plan</span>
+          <h1 class="section-title">Hakkımda</h1>
+          <p class="section-subtitle">Yazılıma yaklaşımım, akademik eğitimim ve problem çözme metodolojim.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              <strong>OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sınıf öğrencisiyim.</strong> Yazılım geliştirmede kalıcı olanın yüzeysel kütüphaneler değil, sağlam mühendislik prensipleri ve algoritmik düşünme becerisi olduğuna inanıyorum.
+            </p>
+            <p>
+              Akademik süreçlerimde nesne yönelimli programlama (OOP), veri yapıları, algoritmalar ve matematiksel modelleme üzerine çalışırken; bireysel ve takım projelerimde C#, .NET ekosistemi, Unity oyun geliştirme ve modern web teknolojileri üzerinde yoğunlaşıyorum.
+            </p>
+            <p>
+              Herhangi bir aracı veya paketi projelere dahil etmeden önce çalışma mantığını kavramaya, kodun bellek verimliliğine ve yarın başka bir geliştirici tarafından rahatlıkla okunabilmesine özen gösteririm.
+            </p>
+            
+            <div class="principles-list">
+              <div class="principle-card">
+                <span class="principle-num">01</span>
+                <div>
+                  <h2 class="principle-title">Gereksiz Bağımlılıklardan Kaçınma</h2>
+                  <p class="principle-desc">Saf ve anlamsal çözümler üretilebildiği sürece devasa paketler yerine yalın mimariyi tercih ederim.</p>
+                </div>
+              </div>
+
+              <div class="principle-card">
+                <span class="principle-num">02</span>
+                <div>
+                  <h2 class="principle-title">Şeffaf & Okunabilir Kod</h2>
+                  <p class="principle-desc">Karmaşık sözdizimleri yerine takım arkadaşlarının ve gelecekteki benim rahatça anlayabileceği net yapılar kurarım.</p>
+                </div>
+              </div>
+
+              <div class="principle-card">
+                <span class="principle-num">03</span>
+                <div>
+                  <h2 class="principle-title">Sürekli Ölçülebilir Gelişim</h2>
+                  <p class="principle-desc">Her projede yeni bir teknik zorluğu çözmeyi ve mimari kararların arkasındaki gerekçeleri belgelemeyi ilke edinirim.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="about-sidebar">
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <div class="terminal-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="terminal-title">developer_spec.json</span>
+              </div>
+              <div class="profile-card-body">
+                <pre class="code-block"><code>{
+  <span class="c-key">"name"</span>: <span class="c-val">"Baran Deniz Mutluoğlu"</span>,
+  <span class="c-key">"university"</span>: <span class="c-val">"OSTİM Teknik Üniversitesi"</span>,
+  <span class="c-key">"department"</span>: <span class="c-val">"Software Engineering (100% EN)"</span>,
+  <span class="c-key">"grade"</span>: <span class="c-val">"2. Sınıf (Sophomore)"</span>,
+  <span class="c-key">"primary_stack"</span>: [
+    <span class="c-val">"C#"</span>,
+    <span class="c-val">".NET"</span>,
+    <span class="c-val">"Unity"</span>,
+    <span class="c-val">"JavaScript"</span>,
+    <span class="c-val">"SQL"</span>
+  ],
+  <span class="c-key">"current_focus"</span>: <span class="c-val">"Backend, game mechanics & clean web UI"</span>,
+  <span class="c-key">"open_to"</span>: <span class="c-val">"Internships & Collaborative Projects"</span>
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="sidebar-box">
+              <h3 class="sidebar-box-title">Eğitim & Süreç</h3>
+              <div class="timeline-simple">
+                <div class="timeline-item">
+                  <div class="t-year">2024 — Günümüz</div>
+                  <div class="t-title">Yazılım Mühendisliği Lisans</div>
+                  <div class="t-sub">OSTİM Teknik Üniversitesi</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <p class="footer-copy">&copy; 2026 Baran Deniz Mutluoğlu.</p>
+        <p class="footer-subtext">Sıfır kütüphane şişkinliği, anlamsal HTML5 ve saf CSS ile hazırlandı.</p>
+      </div>
+
+      <div class="footer-right">
+        <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="back-to-top">
+          <span>GitHub Profilim</span>
+          <span class="external-icon">&#x2197;</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
