@@ -252,25 +252,40 @@ function initLiveTimeAndStatus() {
    5. SPOTIFY ÇALAR & WEB AUDIO API LOFI SYNTHESIZER (Feature 1)
    ==========================================================================
    Açıklama:
-   Kullanıcının isteğiyle entegre edilen bu modül iki seçenek sunar:
+   Kullanıcının isteğiyle entegre edilen bu modül iki ses kaynağı ve hassas
+   ses düzeyi (Volume) kontrolü sunar:
    1. Baran'ın Seçilmiş Spotify Listesi: Resmi Spotify Embed iframe aracılığıyla
       açılır; kullanıcılar listeyi çalabilir veya shuffle/karışık çalma modunda
       dinleyebilir.
    2. Web Audio API Sentezleyici (0 byte harici ses): Kullanıcı isterse analog
       retro lofi synth moduna geçip tarayıcı içinde üretilen akorları dinleyebilir.
+   3. Ana Ses Kontrolü (Master Gain): Web Audio API GainNode mimarisi ve arayüzdeki
+      ses çubuğu (slider) ile kullanıcı sesi 0-100% arasında kısabilir, açabilir
+      veya sessize (mute) alabilir. Tercih edilen ses düzeyi localStorage'a kaydedilir.
    ========================================================================== */
 let audioCtx = null;
 let isAudioPlaying = false;
 let lofiTimer = null;
 let chordIndex = 0;
 
+// Master Ses Düzeyi Değişkenleri
+let masterGainNode = null;
+let masterVolume = 0.7;    // Varsayılan ses seviyesi: %70
+let previousVolume = 0.7;  // Mute (sessize alma) öncesi hatırlanan ses seviyesi
+
 function initLofiSynthesizer() {
-  // DOM elementlerini hem yeni Spotify yapısı hem de geriye dönük uyumluluk için seçiyoruz
+  // DOM elementlerini seçiyoruz
   const musicWidget = document.getElementById('musicWidget') || document.getElementById('lofiWidget');
   const toggleBtn = document.getElementById('musicToggleBtn') || document.getElementById('lofiToggleBtn');
   const spotifyCard = document.getElementById('spotifyCard');
   const spotifyCloseBtn = document.getElementById('spotifyCloseBtn');
   const synthFallbackBtn = document.getElementById('synthFallbackBtn');
+
+  // Ses düzeyi denetim arayüzü elemanları
+  const volumeSlider = document.getElementById('volumeSlider');
+  const volumeVal = document.getElementById('volumeVal');
+  const volumeMuteBtn = document.getElementById('volumeMuteBtn');
+  const volumeIcon = document.getElementById('volumeIcon');
 
   if (!musicWidget || !toggleBtn) return;
 
@@ -310,8 +325,105 @@ function initLofiSynthesizer() {
   }
 
   // --------------------------------------------------------------------------
-  // B) WEB AUDIO API LOFI SYNTHESIZER MOTORU (0 KB SES / ANALOG TINILAR)
+  // B) SES DÜZEYİ (VOLUME) YÖNETİMİ & LOCALSTORAGE KALICILIĞI
   // --------------------------------------------------------------------------
+  // Tarayıcı hafızasından kayıtlı ses düzeyini oku
+  try {
+    const savedVol = localStorage.getItem('baran_portfolio_volume');
+    if (savedVol !== null && !isNaN(parseFloat(savedVol))) {
+      masterVolume = Math.max(0, Math.min(1, parseFloat(savedVol)));
+    }
+  } catch (err) {
+    // Çerez / localStorage erişim engellerinde sessizce varsayılanı kullan
+  }
+
+  // Ses arayüzünü (slider, yüzde metni, ikon) senkronize eden fonksiyon
+  function updateVolumeUI(vol) {
+    const percent = Math.round(vol * 100);
+    if (volumeSlider) {
+      volumeSlider.value = percent;
+      volumeSlider.title = `Ses Düzeyi: %${percent}`;
+    }
+    if (volumeVal) {
+      volumeVal.textContent = `${percent}%`;
+    }
+    if (volumeIcon) {
+      if (vol === 0) {
+        volumeIcon.textContent = '🔇';
+      } else if (vol < 0.35) {
+        volumeIcon.textContent = '🔉';
+      } else {
+        volumeIcon.textContent = '🔊';
+      }
+    }
+  }
+
+  // Ses düzeyini değiştiren çekirdek fonksiyon (0.0 ile 1.0 arası değer alır)
+  function setVolume(vol, saveToStorage = true) {
+    const clamped = Math.max(0, Math.min(1, parseFloat(vol)));
+    masterVolume = clamped;
+
+    if (saveToStorage) {
+      try {
+        localStorage.setItem('baran_portfolio_volume', masterVolume.toString());
+      } catch (err) {}
+    }
+
+    // Web Audio API GainNode üzerinden anlık ses şiddetini uygula
+    if (audioCtx && masterGainNode) {
+      masterGainNode.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
+    }
+
+    updateVolumeUI(masterVolume);
+  }
+
+  // Arayüz başlangıç değerlerini güncelle
+  updateVolumeUI(masterVolume);
+
+  // Slider sürükleme / değiştirme olayı
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+      const newVol = parseFloat(e.target.value) / 100;
+      if (newVol > 0) {
+        previousVolume = newVol;
+      }
+      setVolume(newVol);
+    });
+  }
+
+  // Sesi Kapat / Aç (Mute Toggle) buton dinleyicisi
+  if (volumeMuteBtn) {
+    volumeMuteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (masterVolume > 0) {
+        previousVolume = masterVolume;
+        setVolume(0);
+      } else {
+        setVolume(previousVolume > 0 ? previousVolume : 0.7);
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // C) WEB AUDIO API LOFI SYNTHESIZER MOTORU (0 KB SES / ANALOG TINILAR)
+  // --------------------------------------------------------------------------
+  // AudioContext ve MasterGainNode'un güvenli şekilde başlatılmasını sağlar
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    if (!masterGainNode && audioCtx) {
+      masterGainNode = audioCtx.createGain();
+      masterGainNode.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
+      masterGainNode.connect(audioCtx.destination);
+    }
+    return audioCtx;
+  }
+
   // Lofi Müzik Akor Dizilimi (Frekanslar Hz cinsindendir):
   // Sırasıyla: Am7 -> Fmaj7 -> Cmaj7 -> G
   const chordProgression = [
@@ -324,9 +436,10 @@ function initLofiSynthesizer() {
   // Pentatonik ölçekteki hafif melodi çan frekansları
   const pentatonicMelody = [440.00, 493.88, 523.25, 659.25, 783.99, 880.00];
 
-  // Bir akor kümesini ve rastgele melodi notasını ses dalgasına dönüştüren çekirdek fonksiyon
+  // Bir akor kümesini ve rastgele melodi notasını ses dalgasına dönüştüren fonksiyon
   function playChord(chord, duration = 1.9) {
-    if (!audioCtx) return;
+    ensureAudioContext();
+    if (!audioCtx || !masterGainNode) return;
     const now = audioCtx.currentTime;
 
     // 1. Sıcaklık Filtresi (Biquad Lowpass Filter):
@@ -335,7 +448,8 @@ function initLofiSynthesizer() {
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(680, now);
     filter.Q.setValueAtTime(1.8, now);
-    filter.connect(audioCtx.destination);
+    // Doğrudan hoparlöre değil, kullanıcının ayarladığı ana ses düğümüne (masterGainNode) bağla
+    filter.connect(masterGainNode);
 
     // 2. Akorun her bir sesini osilatörlerle üret
     chord.forEach((freq, idx) => {
@@ -381,13 +495,7 @@ function initLofiSynthesizer() {
 
   // Müziği başlatan fonksiyon (Tarayıcı güvenlik politikası gereği kullanıcı tıklamasıyla başlar)
   function startLofi() {
-    if (!audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      audioCtx = new AudioContextClass();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+    ensureAudioContext();
 
     isAudioPlaying = true;
     musicWidget.classList.add('playing'); // Ekolayzır animasyonunu çalıştır
@@ -434,7 +542,7 @@ function initLofiSynthesizer() {
   }
 
   // --------------------------------------------------------------------------
-  // C) ANA YÜZEN DÜĞME (MAIN PILL BUTTON) ETKİLEŞİMİ
+  // D) ANA YÜZEN DÜĞME (MAIN PILL BUTTON) ETKİLEŞİMİ
   // --------------------------------------------------------------------------
   toggleBtn.addEventListener('click', () => {
     // Eğer Spotify kartı varsa çekmeceyi aç/kapat
@@ -460,7 +568,7 @@ function initLofiSynthesizer() {
   });
 
   // --------------------------------------------------------------------------
-  // D) TERMİNAL & GLOBAL KÖPRÜLERİ (CLI ENTEGRASYONU)
+  // E) TERMİNAL & GLOBAL KÖPRÜLERİ (CLI ENTEGRASYONU)
   // --------------------------------------------------------------------------
   // Terminalden 'spotify' komutu girildiğinde:
   window.toggleSpotifyFromTerminal = function() {
@@ -490,6 +598,16 @@ function initLofiSynthesizer() {
     } else {
       return window.toggleLofiFromTerminal();
     }
+  };
+
+  // Ses düzeyi API'leri (Terminal veya dış fonksiyonlar için)
+  window.setPortfolioVolume = function(val) {
+    setVolume(val);
+    return `Ses düzeyi %${Math.round(masterVolume * 100)} olarak güncellendi.`;
+  };
+
+  window.getPortfolioVolume = function() {
+    return Math.round(masterVolume * 100);
   };
 }
 
@@ -879,7 +997,11 @@ function initTerminalAndKonami() {
   });
 
   // Komut Ayrıştırıcı (Command Dispatcher)
-  function executeCommand(cmd) {
+  function executeCommand(rawCommand) {
+    const parts = (rawCommand || '').trim().split(/\s+/);
+    const cmd = parts[0] ? parts[0].toLowerCase() : '';
+    const arg = parts.slice(1).join(' ').toLowerCase();
+
     switch (cmd) {
       case 'help':
         appendLine(`
@@ -891,6 +1013,9 @@ Kullanılabilir Komutlar:
   <strong>spotify</strong>   - Baran'ın Spotify listesini aç / kapat
   <strong>music</strong>     - Müzik çalar çekmecesini aç / kapat
   <strong>lofi</strong>      - Web Audio API Lofi Synthesizer müziği
+  <strong>vol [0-100]</strong> - Ses düzeyini ayarla (örn: vol 50, vol up, vol down)
+  <strong>mute</strong>      - Sesi tamamen kapat (0%)
+  <strong>unmute</strong>    - Sesi tekrar aç
   <strong>gravity</strong>   - 2D Fizik simülasyonunu başlat
   <strong>matrix</strong>    - Matrix veri yağmuru efektini çalıştır
   <strong>clear</strong>     - Terminal ekranını temizle
@@ -960,6 +1085,45 @@ Durum:   Staj ve ortak projelere açık.
           appendLine(res, 'cyan');
         } else {
           appendLine('Web Audio API sentezleyici henüz yüklenmedi.', 'error');
+        }
+        break;
+
+      case 'volume':
+      case 'vol':
+        if (!arg) {
+          const current = window.getPortfolioVolume ? window.getPortfolioVolume() : 70;
+          appendLine(`Mevcut ses seviyesi: %${current}. Değiştirmek için: <strong>vol 50</strong>, <strong>vol up</strong>, <strong>vol down</strong>`, 'info');
+        } else if (arg === 'up' || arg === '+' || arg === 'arttir' || arg === 'artır') {
+          const current = Math.min(100, (window.getPortfolioVolume ? window.getPortfolioVolume() : 70) + 10);
+          const res = window.setPortfolioVolume ? window.setPortfolioVolume(current / 100) : '';
+          appendLine(res || `Ses %${current} yapıldı.`, 'cyan');
+        } else if (arg === 'down' || arg === '-' || arg === 'azalt' || arg === 'kis') {
+          const current = Math.max(0, (window.getPortfolioVolume ? window.getPortfolioVolume() : 70) - 10);
+          const res = window.setPortfolioVolume ? window.setPortfolioVolume(current / 100) : '';
+          appendLine(res || `Ses %${current} yapıldı.`, 'cyan');
+        } else {
+          const parsed = parseInt(arg.replace('%', ''), 10);
+          if (!isNaN(parsed)) {
+            const clamped = Math.max(0, Math.min(100, parsed));
+            const res = window.setPortfolioVolume ? window.setPortfolioVolume(clamped / 100) : '';
+            appendLine(res || `Ses %${clamped} yapıldı.`, 'cyan');
+          } else {
+            appendLine('Geçersiz ses değeri. Örnek: <strong>vol 50</strong> veya <strong>vol up</strong>', 'error');
+          }
+        }
+        break;
+
+      case 'mute':
+        if (window.setPortfolioVolume) {
+          window.setPortfolioVolume(0);
+          appendLine('Ses tamamen kapatıldı (Muted - 0%).', 'cyan');
+        }
+        break;
+
+      case 'unmute':
+        if (window.setPortfolioVolume) {
+          window.setPortfolioVolume(0.7);
+          appendLine('Ses açıldı (%70).', 'cyan');
         }
         break;
 

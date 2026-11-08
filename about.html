@@ -191,6 +191,25 @@
           loading="lazy">
         </iframe>
       </div>
+
+      <!-- Ses Düzeyi Kontrol Çubuğu (Volume Control) -->
+      <div class="music-volume-wrap" title="Ana Ses Düzeyi (Lofi Synth & Ses Efektleri)">
+        <button id="volumeMuteBtn" class="volume-btn" type="button" aria-label="Sesi Kapat / Aç" title="Sesi Kapat / Aç">
+          <span id="volumeIcon">🔊</span>
+        </button>
+        <input 
+          type="range" 
+          id="volumeSlider" 
+          class="volume-slider" 
+          min="0" 
+          max="100" 
+          value="70" 
+          aria-label="Ses Düzeyi" 
+          title="Ses Düzeyi"
+        />
+        <span class="volume-val" id="volumeVal">70%</span>
+      </div>
+
       <div class="spotify-card-footer">
         <span class="spotify-hint">Shuffle / Rastgele Çal</span>
         <button id="synthFallbackBtn" class="synth-toggle-link" type="button">Lofi Synth Modu</button>

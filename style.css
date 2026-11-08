@@ -1340,6 +1340,98 @@ body {
   display: block;
 }
 
+/* Ses Düzeyi Kontrol Satırı (Volume Slider & Mute Button) */
+.music-volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.65rem;
+  padding: 0.45rem 0.65rem;
+  background: var(--bg-surface-soft);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.volume-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--text-main);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.volume-btn:hover {
+  transform: scale(1.15);
+  background: var(--bg-surface);
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 5px;
+  background: var(--border-color);
+  border-radius: var(--radius-pill);
+  outline: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.volume-slider:hover {
+  background: var(--border-hover);
+}
+
+/* Chrome / Safari / Edge Range Thumb */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1db954;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(29, 185, 84, 0.45);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+  background: #1ed760;
+}
+
+/* Firefox Range Thumb */
+.volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 50%;
+  background: #1db954;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(29, 185, 84, 0.45);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.25);
+  background: #1ed760;
+}
+
+.volume-val {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-width: 32px;
+  text-align: right;
+  user-select: none;
+}
+
 .spotify-card-footer {
   display: flex;
   align-items: center;
