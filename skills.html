@@ -102,8 +102,14 @@
               <h2 class="cat-title">Oyun & Platformlar</h2>
             </div>
             <ul class="stack-items">
-              <li class="stack-item">
-                <div class="item-name">Unity Engine (Orta Seviye)</div>
+              <li class="stack-item stack-item-highlight">
+                <div class="item-header-action">
+                  <div class="item-name">Unity Engine (Orta Seviye)</div>
+                  <button class="skill-action-btn gravity-trigger" type="button" title="Unity 2D fizik motorunu bu sayfada test et">
+                    <span class="pulse-icon">⚡</span>
+                    <span>Fizik Motorunu Başlat</span>
+                  </button>
+                </div>
                 <div class="item-desc">C# script mimarisi, 2D/3D mekanikler, fizik motoru, sahne optimizasyonu ve UI Canvas tasarımı.</div>
               </li>
               <li class="stack-item">
@@ -186,6 +192,21 @@
       </div>
     </button>
   </aside>
+
+  <!-- 2D Physics Overlay (Feature 2) -->
+  <div id="physicsOverlay" class="physics-overlay" aria-hidden="true">
+    <div class="physics-hud">
+      <div class="physics-hud-left">
+        <span class="hud-tag">⚡ 2D Gravity Engine (Unity Homage)</span>
+        <span class="hud-tip">Kutuları farenizle tutup fırlatabilirsiniz!</span>
+      </div>
+      <div class="physics-hud-right">
+        <button id="physicsSpawnBtn" class="hud-btn" type="button">+ Yeni Kutu</button>
+        <button id="physicsCloseBtn" class="hud-btn danger" type="button">Kapat (ESC)</button>
+      </div>
+    </div>
+    <canvas id="physicsCanvas"></canvas>
+  </div>
 
   <!-- Terminal Modal (Feature 4) -->
   <div id="terminalModal" class="terminal-modal" role="dialog" aria-modal="true" aria-label="Geliştirici Terminali">

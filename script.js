@@ -349,13 +349,14 @@ function initLofiSynthesizer() {
    Feature 2: 2D Physics Gravity Playground (Unity Homage)
    -------------------------------------------------------------------------- */
 function initPhysicsPlayground() {
-  const triggerBtn = document.getElementById('gravityToggleBtn');
   const overlay = document.getElementById('physicsOverlay');
   const closeBtn = document.getElementById('physicsCloseBtn');
   const spawnBtn = document.getElementById('physicsSpawnBtn');
   const canvas = document.getElementById('physicsCanvas');
 
-  if (!triggerBtn || !overlay || !canvas) return;
+  if (!overlay || !canvas) return;
+
+  const triggerBtns = document.querySelectorAll('#gravityToggleBtn, .gravity-trigger, #skillsGravityBtn');
 
   const ctx = canvas.getContext('2d');
   let animationId = null;
@@ -516,7 +517,17 @@ function initPhysicsPlayground() {
     };
   }
 
-  canvas.addEventListener('mousedown', (e) => {
+  canvas.addEventListener('mousedown', onPointerDown);
+  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('touchmove', onPointerMove, { passive: false });
+
+  window.addEventListener('mouseup', onPointerUp);
+  window.addEventListener('touchend', onPointerUp);
+
+  function onPointerDown(e) {
+    if (e.touches) e.preventDefault();
     const pos = getPos(e);
     for (let i = bodies.length - 1; i >= 0; i--) {
       if (bodies[i].contains(pos.x, pos.y)) {
@@ -528,10 +539,11 @@ function initPhysicsPlayground() {
         break;
       }
     }
-  });
+  }
 
-  window.addEventListener('mousemove', (e) => {
+  function onPointerMove(e) {
     if (!draggedBody || !isRunning) return;
+    if (e.touches) e.preventDefault();
     const pos = getPos(e);
     const now = performance.now();
     const dt = (now - lastMouse.time) || 16;
@@ -543,17 +555,19 @@ function initPhysicsPlayground() {
 
     draggedBody.x = pos.x - dragOffset.x;
     draggedBody.y = pos.y - dragOffset.y;
-  });
+  }
 
-  window.addEventListener('mouseup', () => {
+  function onPointerUp() {
     if (draggedBody) {
       draggedBody.vx = Math.max(-25, Math.min(25, mouseVel.x));
       draggedBody.vy = Math.max(-25, Math.min(25, mouseVel.y));
       draggedBody = null;
     }
-  });
+  }
 
-  triggerBtn.addEventListener('click', openPhysics);
+  triggerBtns.forEach((btn) => {
+    btn.addEventListener('click', openPhysics);
+  });
   closeBtn.addEventListener('click', closePhysics);
   spawnBtn.addEventListener('click', spawnSingleBody);
 
