@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Sayfa Bulunamadı | Baran Deniz Mutluoğlu</title>
+  <meta name="description" content="Aradığınız sayfa bulunamadı.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Grid Texture -->
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand-logo" aria-label="Ana sayfa">
+        <span class="brand-monogram">BM</span>
+        <span class="brand-name">Baran Deniz Mutluoğlu</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Ana Menü">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+          <li><a href="about.html" class="nav-link">Hakkımda</a></li>
+          <li><a href="projects.html" class="nav-link">Projeler</a></li>
+          <li><a href="skills.html" class="nav-link">Yetkinlikler</a></li>
+          <li><a href="contact.html" class="nav-link">İletişim</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Tema değiştir" title="Tema Değiştir">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 1.5rem;">
+    <div class="container" style="max-width: 600px;">
+      <span class="hero-badge" style="margin-bottom: 1.5rem; display: inline-flex;">ERROR 404</span>
+      <h1 style="font-size: clamp(3rem, 8vw, 6rem); font-family: var(--font-mono); margin: 0 0 1rem; color: var(--accent);">404</h1>
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Aradığınız Sayfa Bulunamadı</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">
+        Görünüşe göre var olmayan bir koordinata ulaştınız veya fizik motorumuz bu sayfayı yerçekimiyle aşağı düşürdü.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn-primary">Ana Sayfaya Dön</a>
+        <a href="projects.html" class="btn btn-secondary">Projeleri İncele</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <p>&copy; 2026 Baran Deniz Mutluoğlu. OSTİM Teknik Üniversitesi Yazılım Mühendisliği.</p>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="back-to-top">
+          GitHub Profilim &rarr;
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
