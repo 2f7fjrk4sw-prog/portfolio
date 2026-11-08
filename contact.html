@@ -135,6 +135,55 @@
     </div>
   </footer>
 
+  <!-- Floating Lofi Synthesizer Widget (Feature 1) -->
+  <aside class="lofi-player-widget" id="lofiWidget" aria-label="Lofi Müzik Çalar">
+    <button id="lofiToggleBtn" class="lofi-main-btn" type="button" aria-label="Lofi Müziği Başlat/Durdur" title="Web Audio API Lofi Synthesizer">
+      <div class="lofi-icon-box">
+        <span class="lofi-play-icon">▶</span>
+        <span class="lofi-pause-icon">⏸</span>
+      </div>
+      <div class="lofi-info">
+        <span class="lofi-title">Lofi Synth FM</span>
+        <span class="lofi-subtitle">Web Audio API • 0 kb MP3</span>
+      </div>
+      <div class="eq-visualizer" aria-hidden="true">
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+      </div>
+    </button>
+  </aside>
+
+  <!-- Terminal Modal (Feature 4) -->
+  <div id="terminalModal" class="terminal-modal" role="dialog" aria-modal="true" aria-label="Geliştirici Terminali">
+    <div class="terminal-overlay" id="terminalBackdrop"></div>
+    <div class="terminal-window">
+      <div class="terminal-topbar">
+        <div class="terminal-controls">
+          <button class="t-btn t-close" id="terminalCloseBtn" aria-label="Kapat" title="Kapat"></button>
+          <span class="t-btn t-min"></span>
+          <span class="t-btn t-max"></span>
+        </div>
+        <div class="terminal-title-text">baran@ostim-os:~ (v2.0)</div>
+        <div class="terminal-hint">Çıkmak için: <code>exit</code> veya <code>ESC</code></div>
+      </div>
+      <div class="terminal-body" id="terminalOutput">
+        <div class="terminal-welcome">
+          ╔════════════════════════════════════════════════════════════════╗<br>
+          ║ &nbsp;BARAN DENİZ MUTLUOĞLU — Geliştirici Terminal Sistemi v2.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ║ &nbsp;OSTİM Teknik Üniversitesi Yazılım Mühendisliği &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ╚════════════════════════════════════════════════════════════════╝<br>
+          Mevcut komutları görmek için <strong>help</strong> yazın.<br><br>
+        </div>
+      </div>
+      <div class="terminal-input-row">
+        <span class="t-prompt-label">baran@terminal:~$</span>
+        <input type="text" id="terminalInput" class="terminal-cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal komut girdisi">
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="alert" aria-live="polite">E-posta adresi panoya kopyalandı!</div>
 
   <script src="script.js"></script>

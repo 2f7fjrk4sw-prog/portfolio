@@ -68,10 +68,19 @@
     <!-- Home / Hero Section -->
     <section class="section home-hero">
       <div class="container hero-container">
-        <!-- Status Indicator -->
-        <div class="status-badge" role="status">
-          <span class="status-dot"></span>
-          <span class="status-text">OSTİM Teknik Üniv. • Yazılım Mühendisliği (2. Sınıf)</span>
+        <!-- Status Indicator & Live Time -->
+        <div class="hero-status-row">
+          <div class="status-badge" role="status">
+            <span class="status-dot"></span>
+            <span class="status-text">OSTİM Teknik Üniv. • Yazılım Mühendisliği (2. Sınıf)</span>
+          </div>
+
+          <div class="live-activity-badge" id="liveActivityBadge" title="Baran'ın saat dilimi ve güncel aktivitesi">
+            <span class="live-clock-icon">🕒</span>
+            <span class="live-time" id="liveTimeText">--:--</span>
+            <span class="live-sep">•</span>
+            <span class="live-status-text" id="liveActivityText">Yükleniyor...</span>
+          </div>
         </div>
 
         <h1 class="hero-title">
@@ -83,6 +92,20 @@
           <span>.NET</span> <span class="dot-sep">•</span>
           <span>Unity Engine</span> <span class="dot-sep">•</span>
           <span>Modern Web</span>
+        </div>
+
+        <!-- Interactive Playground Action Pills -->
+        <div class="hero-actions-bar">
+          <button id="gravityToggleBtn" class="feature-pill-btn" type="button" title="Yerçekimi ve 2D oyun fiziği simülasyonunu başlat">
+            <span class="pill-icon">⚡</span>
+            <span>Fizik Modunu Başlat (2D Gravity)</span>
+          </button>
+          
+          <button id="openTerminalBtn" class="feature-pill-btn ghost" type="button" title="Terminal konsolunu aç (veya klavyeden ~ tuşuna bas)">
+            <span class="pill-icon">💻</span>
+            <span>Terminal CLI</span>
+            <span class="kbd-hint">~</span>
+          </button>
         </div>
 
         <!-- Custom User Introduction Box -->
@@ -190,6 +213,70 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Lofi Synthesizer Widget (Feature 1) -->
+  <aside class="lofi-player-widget" id="lofiWidget" aria-label="Lofi Müzik Çalar">
+    <button id="lofiToggleBtn" class="lofi-main-btn" type="button" aria-label="Lofi Müziği Başlat/Durdur" title="Web Audio API Lofi Synthesizer">
+      <div class="lofi-icon-box">
+        <span class="lofi-play-icon">▶</span>
+        <span class="lofi-pause-icon">⏸</span>
+      </div>
+      <div class="lofi-info">
+        <span class="lofi-title">Lofi Synth FM</span>
+        <span class="lofi-subtitle">Web Audio API • 0 kb MP3</span>
+      </div>
+      <div class="eq-visualizer" aria-hidden="true">
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+      </div>
+    </button>
+  </aside>
+
+  <!-- 2D Physics Overlay (Feature 2) -->
+  <div id="physicsOverlay" class="physics-overlay" aria-hidden="true">
+    <div class="physics-hud">
+      <div class="physics-hud-left">
+        <span class="hud-tag">⚡ 2D Gravity Engine (Unity Homage)</span>
+        <span class="hud-tip">Kutuları farenizle tutup fırlatabilirsiniz!</span>
+      </div>
+      <div class="physics-hud-right">
+        <button id="physicsSpawnBtn" class="hud-btn" type="button">+ Yeni Kutu</button>
+        <button id="physicsCloseBtn" class="hud-btn danger" type="button">Kapat (ESC)</button>
+      </div>
+    </div>
+    <canvas id="physicsCanvas"></canvas>
+  </div>
+
+  <!-- Terminal Modal (Feature 4) -->
+  <div id="terminalModal" class="terminal-modal" role="dialog" aria-modal="true" aria-label="Geliştirici Terminali">
+    <div class="terminal-overlay" id="terminalBackdrop"></div>
+    <div class="terminal-window">
+      <div class="terminal-topbar">
+        <div class="terminal-controls">
+          <button class="t-btn t-close" id="terminalCloseBtn" aria-label="Kapat" title="Kapat"></button>
+          <span class="t-btn t-min"></span>
+          <span class="t-btn t-max"></span>
+        </div>
+        <div class="terminal-title-text">baran@ostim-os:~ (v2.0)</div>
+        <div class="terminal-hint">Çıkmak için: <code>exit</code> veya <code>ESC</code></div>
+      </div>
+      <div class="terminal-body" id="terminalOutput">
+        <div class="terminal-welcome">
+          ╔════════════════════════════════════════════════════════════════╗<br>
+          ║ &nbsp;BARAN DENİZ MUTLUOĞLU — Geliştirici Terminal Sistemi v2.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ║ &nbsp;OSTİM Teknik Üniversitesi Yazılım Mühendisliği &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ╚════════════════════════════════════════════════════════════════╝<br>
+          Mevcut komutları görmek için <strong>help</strong> yazın.<br><br>
+        </div>
+      </div>
+      <div class="terminal-input-row">
+        <span class="t-prompt-label">baran@terminal:~$</span>
+        <input type="text" id="terminalInput" class="terminal-cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal komut girdisi">
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

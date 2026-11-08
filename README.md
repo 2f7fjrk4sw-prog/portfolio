@@ -17,6 +17,14 @@ Piyasadaki standart, yapay zeka tarafından üretilmiş kopya portfolyolardan (n
 
 ## ⚡ Öne Çıkan Özellikler
 
+- 🎵 **Web Audio API Lofi Synthesizer:**
+  - 0 KB harici ses dosyası veya MP3 yükü olmadan; matematiksel frekanslar, ADSR envelope ve lowpass filtre ile saf JavaScript'te çalışan dahili lofi müzik motoru ve dans eden ekolayzır barları.
+- ⚡ **2D Gravity & Fizik Motoru (Unity Homage):**
+  - Sayfa üzerinde saf Canvas API ile çalışan yerçekimi, esneklik ($e = 0.65$), hava direnci, zemin çarpışmaları ve fareyle tutup fırlatılabilen interaktif 2D fizik alanı.
+- 💻 **Retro Terminal CLI & Konami Code Easter Egg:**
+  - `↑ ↑ ↓ ↓ ← → ← → B A` veya `~` tuşu ile açılan, `help`, `skills`, `projects`, `music`, `gravity`, `matrix` gibi komutları çalıştıran interaktif geliştirici konsolu.
+- 🕒 **Canlı Ankara Saati & Durum Simülatörü:**
+  - `Europe/Istanbul` saat dilimine göre anlık çalışan ve saatine göre geliştirici aktivitelerini yansıtan dinamik çip.
 - 🌓 **Akıllı Tema Motoru:**
   - Kullanıcının işletim sistemi tercihini (`prefers-color-scheme`) otomatik algılar.
   - Kullanıcının manuel seçimini `localStorage` üzerinde saklar.
