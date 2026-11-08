@@ -50,7 +50,8 @@ portfolio/
 ├── skills.html       # Yetkinlikler: C#, .NET, Unity, SQL, Web ve mühendislik pratikleri
 ├── contact.html      # İletişim: Doğrudan e-posta, GitHub ve sosyal bağlantılar
 ├── style.css         # CSS Custom Properties, grid sistemi, fluid tipografi & temalar
-├── script.js         # Tema yöneticisi, clipboard etkileşimi & mobil menü
+├── script.js         # Müzik çalar, Web Audio synth, 2D Canvas fizik & terminal CLI
+├── PROJECT_PLAN.md   # Proje yol haritası ve yapay zeka genel sistem istemi (AI System Prompt)
 └── README.md         # Proje mimari ve teknik dökümantasyonu
 ```
 
