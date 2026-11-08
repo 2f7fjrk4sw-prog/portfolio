@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Özgeçmiş (CV) — Baran Deniz Mutluoğlu | Yazılım Mühendisi Adayı</title>
+  <meta name="description" content="Baran Deniz Mutluoğlu — OSTİM Teknik Üniversitesi Yazılım Mühendisliği öğrencisi resmi özgeçmişi (CV). Eğitim, teknik yetkinlikler ve projeler.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Grid Texture -->
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand-logo" aria-label="Ana sayfa">
+        <span class="brand-monogram">BM</span>
+        <span class="brand-name">Baran Deniz Mutluoğlu</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Ana Menü">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Ana Sayfa</a></li>
+          <li><a href="about.html" class="nav-link">Hakkımda</a></li>
+          <li><a href="projects.html" class="nav-link">Projeler</a></li>
+          <li><a href="skills.html" class="nav-link">Yetkinlikler</a></li>
+          <li><a href="cv.html" class="nav-link active">CV</a></li>
+          <li><a href="contact.html" class="nav-link">İletişim</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Tema değiştir" title="Tema Değiştir">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobileMenuBtn" class="icon-button mobile-only" type="button" aria-label="Menüyü aç/kapat" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container cv-container">
+        
+        <!-- Üst Eylem ve İndirme Çubuğu (Yazdırma ve PDF sırasında gizlenir) -->
+        <div class="cv-actions-bar">
+          <div class="cv-actions-left">
+            <button class="btn btn-primary" onclick="window.print()" type="button" title="Tarayıcının yazdır diyaloğuyla PDF olarak kaydet veya yazdır">
+              <span>🖨️ PDF Olarak İndir / Yazdır</span>
+            </button>
+            <button class="btn btn-secondary" id="copyCvBtn" type="button" title="Özgeçmişi düz metin olarak panoya kopyala">
+              <span>📋 Metni Kopyala</span>
+            </button>
+          </div>
+          <div class="cv-actions-right">
+            <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="btn btn-secondary">
+              <span>GitHub &rarr;</span>
+            </a>
+            <a href="https://linkedin.com/in/baranmutluoglua" target="_blank" rel="noopener" class="btn btn-secondary">
+              <span>LinkedIn &rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Yazdırılabilir & Etkileşimli CV Kağıdı -->
+        <article class="cv-sheet" id="cvDocument">
+          
+          <!-- Başlık & İletişim Bilgileri -->
+          <header class="cv-header">
+            <h1 class="cv-name">BARAN DENİZ MUTLUOĞLU</h1>
+            <div class="cv-role">Yazılım Mühendisi Adayı • 2. Sınıf Öğrencisi</div>
+            
+            <div class="cv-contact-row">
+              <span class="cv-contact-item">
+                <span>📍</span> Ankara, Türkiye
+              </span>
+              <a href="mailto:barandmutluoglu@icloud.com" class="cv-contact-item">
+                <span>✉️</span> barandmutluoglu@icloud.com
+              </a>
+              <a href="https://linkedin.com/in/baranmutluoglua" target="_blank" rel="noopener" class="cv-contact-item">
+                <span>💼</span> linkedin.com/in/baranmutluoglua
+              </a>
+              <a href="https://github.com/2f7fjrk4sw-prog" target="_blank" rel="noopener" class="cv-contact-item">
+                <span>💻</span> github.com/2f7fjrk4sw-prog
+              </a>
+            </div>
+          </header>
+
+          <hr class="cv-divider">
+
+          <!-- 01. PROFESYONEL ÖZET -->
+          <section class="cv-section">
+            <h2 class="cv-section-title">
+              <span class="cv-tag">01.</span> Profesyonel Özet
+            </h2>
+            <p class="cv-summary-text">
+              OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sınıf öğrencisi. C#, .NET ekosistemi, Unity oyun motoru ve modern web mimarilerine odaklanan; algoritma mantığı, teknik analiz ve sistem disiplini kuvvetli bir mühendis adayı. Üniversite eğitimiyle edindiği teorik mühendislik temellerini pratik projelerle pekiştirmeyi, temiz, modüler ve bakımı kolay kod üretmeyi hedeflemektedir.
+            </p>
+          </section>
+
+          <!-- 02. EĞİTİM -->
+          <section class="cv-section">
+            <h2 class="cv-section-title">
+              <span class="cv-tag">02.</span> Eğitim
+            </h2>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">OSTİM Teknik Üniversitesi</h3>
+                <span class="cv-entry-date">2024 – Günümüz</span>
+              </div>
+              <div class="cv-entry-sub">Yazılım Mühendisliği (Lisans — %100 İngilizce) • Ankara</div>
+              <ul class="cv-bullet-list">
+                <li>Algoritmalar ve Programlama Mantığı, Nesne Yönelimli Programlama (OOP), Veri Yapıları ve Ayrık Matematik temelleri.</li>
+                <li>Mühendislik pratikleri, teknik analiz ve yazılım yaşam döngüsü disiplini.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">OSTİM Teknik Üniversitesi</h3>
+                <span class="cv-entry-date">2023 – 2024</span>
+              </div>
+              <div class="cv-entry-sub">İngilizce Hazırlık Programı • Ankara</div>
+              <ul class="cv-bullet-list">
+                <li>Yabancı Diller Yüksekokulu bünyesinde yoğun akademik İngilizce ve teknik literatür takibi eğitimi.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- 03. TEKNİK PROJELER & UYGULAMALAR -->
+          <section class="cv-section">
+            <h2 class="cv-section-title">
+              <span class="cv-tag">03.</span> Öne Çıkan Projeler & Uygulamalar
+            </h2>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">Prosedürel Web Audio Müzik & Ritim Motoru</h3>
+                <span class="cv-entry-date">2026</span>
+              </div>
+              <div class="cv-entry-sub">Teknolojiler: Web Audio API, Vanilla JavaScript, HTML5/CSS3</div>
+              <ul class="cv-bullet-list">
+                <li>0 KB harici ses dosyasıyla çalışan, 4 tamamen farklı müzik türünü (Chillhop boom-bap, 8-Bit Chiptune arpeggiator, Cyberpunk synthwave ve algoritmik yağmur) tarayıcıda dinamik osilatörlerle sentezleyen ses motoru geliştirildi.</li>
+                <li>Master GainNode mimarisiyle donanım düzeyinde akıcı ses seviyesi (%0 - %100) ve anlık mute kontrolü uygulandı.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">2D Canvas Yerçekimi & Oyun Fiziği Simülatörü</h3>
+                <span class="cv-entry-date">2026</span>
+              </div>
+              <div class="cv-entry-sub">Teknolojiler: JavaScript Canvas API, Vektör Fiziği, Çarpışma Tespiti</div>
+              <ul class="cv-bullet-list">
+                <li>Sayfa elemanlarını yerçekimi ivmesi, elastik zemin sekmesi ve sürtünme katsayılarıyla simüle eden 2D fizik motoru inşa edildi.</li>
+                <li>Kullanıcının fareyle dinamik kutular oluşturup fırlatabildiği etkileşimli oyun mekanikleri kodlandı.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">Retro CLI & Geliştirici Terminal Arayüzü</h3>
+                <span class="cv-entry-date">2026</span>
+              </div>
+              <div class="cv-entry-sub">Teknolojiler: JavaScript DOM, Keyboard Event Engine, CLI Parser</div>
+              <ul class="cv-bullet-list">
+                <li>Konami Code (↑ ↑ ↓ ↓ ← → ← → B A) ve `~` tuşuyla tetiklenen retro interaktif terminal konsolu geliştirildi.</li>
+                <li>Komut ayrıştırıcı, komut geçmişi ve müzik/fizik motoru kontrolleri entegre edildi.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">C# / Unity 2D Platform Oyunu Mekanikleri</h3>
+                <span class="cv-entry-date">2025</span>
+              </div>
+              <div class="cv-entry-sub">Teknolojiler: C#, Unity Engine, Rigidbody2D, State Machine</div>
+              <ul class="cv-bullet-list">
+                <li>Fizik tabanlı 2D karakter kontrolü, zıplama eğrileri, yerçekimi ve oyun döngüsü optimizasyonları kodlandı.</li>
+              </ul>
+            </div>
+
+            <div class="cv-entry">
+              <div class="cv-entry-head">
+                <h3 class="cv-entry-title">EOS Projesi (Teknoloji & Kavram Geliştirme)</h3>
+                <span class="cv-entry-date">2024</span>
+              </div>
+              <div class="cv-entry-sub">Teknolojiler: Teknik Analiz, Etimolojik Araştırma, Konsept Mimarisi</div>
+              <ul class="cv-bullet-list">
+                <li>Teknoloji odaklı proje için etimolojik ve kavramsal isimlendirme araştırmaları yapılarak marka mimarisi oluşturuldu.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- 04. TEKNİK YETKİNLİKLER -->
+          <section class="cv-section">
+            <h2 class="cv-section-title">
+              <span class="cv-tag">04.</span> Teknik Yetkinlikler
+            </h2>
+
+            <div class="cv-skills-grid">
+              <div class="cv-skill-group">
+                <div class="cv-skill-group-title">
+                  <span>💻</span> Programlama Dilleri
+                </div>
+                <div class="cv-skill-tags">
+                  <span class="cv-skill-tag">C# (.NET)</span>
+                  <span class="cv-skill-tag">C</span>
+                  <span class="cv-skill-tag">JavaScript (ES6+)</span>
+                  <span class="cv-skill-tag">HTML5 / CSS3</span>
+                  <span class="cv-skill-tag">SQL</span>
+                </div>
+              </div>
+
+              <div class="cv-skill-group">
+                <div class="cv-skill-group-title">
+                  <span>🎮</span> Oyun Geliştirme & Motorlar
+                </div>
+                <div class="cv-skill-tags">
+                  <span class="cv-skill-tag">Unity Engine</span>
+                  <span class="cv-skill-tag">2D Oyun Fiziği</span>
+                  <span class="cv-skill-tag">Rigidbody2D</span>
+                  <span class="cv-skill-tag">C# Scripting</span>
+                  <span class="cv-skill-tag">Tilemap</span>
+                </div>
+              </div>
+
+              <div class="cv-skill-group">
+                <div class="cv-skill-group-title">
+                  <span>⚙️</span> Araçlar & Kütüphaneler
+                </div>
+                <div class="cv-skill-tags">
+                  <span class="cv-skill-tag">Git / GitHub</span>
+                  <span class="cv-skill-tag">VS Code</span>
+                  <span class="cv-skill-tag">Web Audio API</span>
+                  <span class="cv-skill-tag">Canvas API</span>
+                  <span class="cv-skill-tag">GCC Compiler</span>
+                </div>
+              </div>
+
+              <div class="cv-skill-group">
+                <div class="cv-skill-group-title">
+                  <span>🔬</span> İlgi & Araştırma Alanları
+                </div>
+                <div class="cv-skill-tags">
+                  <span class="cv-skill-tag">Oyun Fiziği</span>
+                  <span class="cv-skill-tag">Algoritmik Mantık</span>
+                  <span class="cv-skill-tag">Matematiksel Analiz</span>
+                  <span class="cv-skill-tag">Savunma Sanayii</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 05. DİLLER -->
+          <section class="cv-section">
+            <h2 class="cv-section-title">
+              <span class="cv-tag">05.</span> Diller
+            </h2>
+            <ul class="cv-bullet-list">
+              <li><strong>Türkçe:</strong> Anadil</li>
+              <li><strong>İngilizce:</strong> B2 / Profesyonel Teknik Yetkinlik (OSTİM Teknik Üniversitesi %100 İngilizce Mühendislik Lisans Eğitimi)</li>
+            </ul>
+          </section>
+
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Kopyalandı Bildirimi (Toast) -->
+  <div class="cv-toast" id="cvToast">Özgeçmiş metin formatında panoya kopyalandı!</div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <p class="footer-copyright">&copy; 2026 Baran Deniz Mutluoğlu. Tüm hakları saklıdır.</p>
+        <p class="footer-subtext">OSTİM Teknik Üniversitesi — Yazılım Mühendisliği (2. Sınıf)</p>
+      </div>
+      <div class="footer-right">
+        <a href="#top" class="back-to-top" aria-label="Sayfanın başına dön">
+          <span>&uarr;</span> Başa Dön
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Yerel Müzik Çalar & Spotify Kartı Bileşeni -->
+  <aside class="music-player-widget" id="musicPlayerWidget" aria-label="Müzik Çalar ve Spotify Durumu">
+    <div class="music-card-header">
+      <div class="music-title-group">
+        <span class="music-widget-title" id="trackTitleDisplay">1. Chillhop Beat (Lofi Boom-Bap &amp; Vinyl)</span>
+        <span class="track-status-pill" id="trackStatusPill">Durduruldu</span>
+      </div>
+      <button class="music-close-btn" id="musicWidgetCloseBtn" type="button" aria-label="Çaları simge durumuna küçült" title="Küçült">
+        &times;
+      </button>
+    </div>
+
+    <div class="spotify-status-card">
+      <div class="spotify-card-top">
+        <div class="spotify-status-badge">
+          <span class="spotify-live-dot" aria-hidden="true"></span>
+          <span class="spotify-badge-text">SPOTIFY'DA NE DİNLİYORUM?</span>
+        </div>
+        <a href="https://open.spotify.com/playlist/3DzI2diuYDRNeN0FC8duot?si=72bdabda5c8143d9" target="_blank" rel="noopener" class="spotify-listen-btn" title="Spotify'da Dinle">
+          Listeyi Aç &nearr;
+        </a>
+      </div>
+      <div class="spotify-track-row">
+        <div class="spotify-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+        </div>
+        <div class="spotify-track-info">
+          <span class="spotify-track-title">Baran'ın Favori Parçaları</span>
+          <span class="spotify-track-artist">Spotify Çalma Listesi • Karışık Çal</span>
+        </div>
+      </div>
+      <button class="spotify-embed-toggle" id="spotifyEmbedToggle" type="button" aria-expanded="false">
+        <span>Kişisel Çalma Listesini Göster</span>
+        <span class="toggle-arrow">&#x25BC;</span>
+      </button>
+      <div class="spotify-embed-container" id="spotifyEmbedContainer" style="display: none;">
+        <iframe 
+          id="spotifyIframe"
+          style="border-radius:12px; border:0; width:100%; height:152px;" 
+          src="https://open.spotify.com/embed/playlist/3DzI2diuYDRNeN0FC8duot?utm_source=generator&amp;theme=0" 
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="native-player-box">
+      <div class="player-controls-row">
+        <button class="track-btn" id="prevTrackBtn" type="button" title="Önceki Parça" aria-label="Önceki Parça">
+          ⏮
+        </button>
+        <button class="play-btn-circle" id="playPauseBtn" type="button" title="Çal / Durdur" aria-label="Müziği Çal veya Durdur">
+          <span id="playPauseIcon">▶</span>
+        </button>
+        <button class="track-btn" id="nextTrackBtn" type="button" title="Sonraki Parça" aria-label="Sonraki Parça">
+          ⏭
+        </button>
+      </div>
+
+      <div class="music-volume-wrap" id="volumeControlWrap">
+        <button class="volume-btn" id="volumeMuteBtn" type="button" title="Sesi Kapat / Aç" aria-label="Sesi Sessize Al veya Aç">
+          <span id="volumeIcon">🔊</span>
+        </button>
+        <input 
+          type="range" 
+          id="musicVolumeSlider" 
+          class="volume-slider" 
+          min="0" 
+          max="100" 
+          value="70" 
+          step="1" 
+          title="Ses Seviyesi" 
+          aria-label="Yerel müzik ses seviyesi"
+        >
+        <span class="volume-percent" id="volumePercentText">%70</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Simge Durumundaki Müzik Butonu (Pill) -->
+  <aside class="floating-music-widget" aria-label="Müzik Oynatıcıyı Aç">
+    <button id="floatingMusicBtn" class="floating-music-btn" type="button" aria-label="Müzik çaları aç" title="Müzik Çaları Göster">
+      <span class="music-wave-icon" aria-hidden="true">🎵</span>
+      <div class="music-btn-text">
+        <span class="music-title" id="floatingTrackTitle">1. Chillhop Beat</span>
+        <span class="music-subtitle">
+          <span class="live-dot-mini"></span> Spotify: Baran Dinliyor
+        </span>
+      </div>
+      <div class="eq-visualizer" aria-hidden="true">
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+      </div>
+    </button>
+  </aside>
+
+  <!-- 2D Physics Overlay (Feature 2) -->
+  <div id="physicsOverlay" class="physics-overlay" aria-hidden="true">
+    <div class="physics-hud">
+      <div class="physics-hud-left">
+        <span class="hud-tag">⚡ 2D Gravity Engine (Unity Homage)</span>
+        <span class="hud-tip">Kutuları farenizle tutup fırlatabilirsiniz!</span>
+      </div>
+      <div class="physics-hud-right">
+        <button id="physicsSpawnBtn" class="hud-btn" type="button">+ Yeni Kutu</button>
+        <button id="physicsCloseBtn" class="hud-btn danger" type="button">Kapat (ESC)</button>
+      </div>
+    </div>
+    <canvas id="physicsCanvas"></canvas>
+  </div>
+
+  <!-- Terminal Modal (Feature 4) -->
+  <div id="terminalModal" class="terminal-modal" role="dialog" aria-modal="true" aria-label="Geliştirici Terminali">
+    <div class="terminal-overlay" id="terminalBackdrop"></div>
+    <div class="terminal-window">
+      <div class="terminal-topbar">
+        <div class="terminal-controls">
+          <button class="t-btn t-close" id="terminalCloseBtn" aria-label="Kapat" title="Kapat"></button>
+          <span class="t-btn t-min"></span>
+          <span class="t-btn t-max"></span>
+        </div>
+        <div class="terminal-title-text">baran@ostim-os:~ (v2.0)</div>
+        <div class="terminal-hint">Çıkmak için: <code>exit</code> veya <code>ESC</code></div>
+      </div>
+      <div class="terminal-body" id="terminalOutput">
+        <div class="terminal-welcome">
+          ╔════════════════════════════════════════════════════════════════╗<br>
+          ║ &nbsp;BARAN DENİZ MUTLUOĞLU — Geliştirici Terminal Sistemi v2.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ║ &nbsp;OSTİM Teknik Üniversitesi Yazılım Mühendisliği &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br>
+          ╚════════════════════════════════════════════════════════════════╝<br>
+          Mevcut komutları görmek için <strong>help</strong> yazın.<br><br>
+        </div>
+      </div>
+      <div class="terminal-input-row">
+        <span class="t-prompt-label">baran@terminal:~$</span>
+        <input type="text" id="terminalInput" class="terminal-cli-input" autocomplete="off" spellcheck="false" aria-label="Terminal komut girdisi">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

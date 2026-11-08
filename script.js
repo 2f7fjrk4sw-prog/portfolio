@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLofiSynthesizer();    // Web Audio API müzik çalarını hazırla
   initPhysicsPlayground();  // 2D Fizik motoru tuvalini hazırla
   initTerminalAndKonami();  // Terminal ve Konami Code dinleyicisini kur
+  initCvPage();             // Özgeçmiş (CV) kopyalama ve yazdırma yardımcılarını bağla
 });
 
 /* ==========================================================================
@@ -1442,6 +1443,7 @@ Kullanılabilir Komutlar:
   <strong>about</strong>     - Baran Deniz Mutluoğlu profil detayları
   <strong>skills</strong>    - Uzmanlık alanları ve teknolojiler
   <strong>projects</strong>  - Öne çıkan projeler ve bağlantılar
+  <strong>cv</strong>        - Baran Deniz Mutluoğlu resmi özgeçmişi (CV)
   <strong>contact</strong>   - E-posta ve sosyal profil linkleri
   <strong>music</strong>     - Yerel lofi müziği başlat / durdur
   <strong>next</strong>      - Sıradaki parçaya geç
@@ -1490,6 +1492,12 @@ E-posta: barandmutluoglu@icloud.com
 GitHub:  https://github.com/2f7fjrk4sw-prog
 Durum:   Staj ve ortak projelere açık.
         `, 'info');
+        break;
+
+      case 'cv':
+      case 'resume':
+        appendLine('Özgeçmiş (CV) sayfasına yönlendiriliyorsunuz...', 'cyan');
+        setTimeout(() => { window.location.href = 'cv.html'; }, 500);
         break;
 
       case 'spotify':
@@ -1615,5 +1623,117 @@ Durum:   Staj ve ortak projelere açık.
   // XSS koruması için HTML karakter kaçış fonksiyonu
   function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+}
+
+/* ==========================================================================
+   8. ÖZGEÇMİŞ (CV) SAYFASI YARDIMCILARI & METİN KOPYALAYICI
+   ==========================================================================
+   Açıklama:
+   Kullanıcının cv.html sayfasında "Metni Kopyala" butonuna basması durumunda;
+   Baran Deniz Mutluoğlu'nun özgeçmişini temiz, ATS uyumlu düz metin / Markdown
+   formatında panoya (clipboard) kopyalar ve kullanıcıya toast bildirimi gösterir.
+   ========================================================================== */
+function initCvPage() {
+  const copyBtn = document.getElementById('copyCvBtn');
+  const toast = document.getElementById('cvToast');
+
+  if (!copyBtn) return;
+
+  copyBtn.addEventListener('click', () => {
+    const cvText = `BARAN DENİZ MUTLUOĞLU
+Yazılım Mühendisi Adayı • OSTİM Teknik Üniversitesi (2. Sınıf)
+Konum: Ankara, Türkiye
+E-posta: barandmutluoglu@icloud.com
+LinkedIn: https://linkedin.com/in/baranmutluoglua
+GitHub: https://github.com/2f7fjrk4sw-prog
+
+==================================================
+01. PROFESYONEL ÖZET
+==================================================
+OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sınıf öğrencisi. C#, .NET ekosistemi, Unity oyun motoru ve modern web mimarilerine odaklanan; algoritma mantığı, teknik analiz ve sistem disiplini kuvvetli bir mühendis adayı. Üniversite eğitimiyle edindiği teorik mühendislik temellerini pratik projelerle pekiştirmeyi, temiz, modüler ve bakımı kolay kod üretmeyi hedeflemektedir.
+
+==================================================
+02. EĞİTİM
+==================================================
+• OSTİM Teknik Üniversitesi (2024 – Günümüz)
+  Yazılım Mühendisliği (Lisans — %100 İngilizce) | Ankara
+  - Algoritmalar, OOP (Nesne Yönelimli Programlama), Veri Yapıları, Ayrık Matematik
+• OSTİM Teknik Üniversitesi (2023 – 2024)
+  İngilizce Hazırlık Programı | Ankara
+
+==================================================
+03. ÖNE ÇIKAN PROJELER & UYGULAMALAR
+==================================================
+• Prosedürel Web Audio Müzik & Ritim Motoru (2026)
+  Teknolojiler: Web Audio API, Vanilla JavaScript, HTML5/CSS3
+  - 0 KB harici ses dosyasıyla çalışan, 4 tamamen farklı müzik türünü (Chillhop boom-bap, 8-Bit Chiptune arpeggiator, Cyberpunk synthwave ve algoritmik yağmur) tarayıcıda dinamik osilatörlerle sentezleyen ses motoru mimarisi.
+  - Donanım seviyesinde Master GainNode entegrasyonuyla %0-%100 kesintisiz ses şiddeti kontrolü.
+
+• 2D Canvas Yerçekimi & Oyun Fiziği Simülatörü (2026)
+  Teknolojiler: JavaScript Canvas API, Vektör Fiziği, Çarpışma Tespiti
+  - Sayfa elemanlarını yerçekimi ivmesi, elastik zemin sekmesi ve sürtünme katsayılarıyla simüle eden 2D fizik motoru.
+  - Kullanıcının fareyle dinamik kutular oluşturup fırlatabildiği etkileşimli oyun mekaniği.
+
+• Retro CLI & Geliştirici Terminal Arayüzü (2026)
+  Teknolojiler: JavaScript DOM, Keyboard Event Engine, CLI Parser
+  - Konami Code (↑ ↑ ↓ ↓ ← → ← → B A) ve ~ tuşuyla tetiklenen retro interaktif terminal konsolu.
+
+• C# / Unity 2D Platform Oyunu Mekanikleri (2025)
+  Teknolojiler: C#, Unity Engine, Rigidbody2D, State Machine
+  - Fizik tabanlı 2D karakter kontrolü, zıplama eğrileri ve oyun döngüsü optimizasyonları.
+
+• EOS Projesi (Teknoloji & Kavram Geliştirme) (2024)
+  Teknolojiler: Teknik Analiz, Etimolojik Araştırma, Konsept Mimarisi
+  - Teknoloji odaklı proje için etimolojik ve kavramsal araştırmalarla marka mimarisi.
+
+==================================================
+04. TEKNİK YETKİNLİKLER
+==================================================
+• Programlama Dilleri: C# (.NET), C, JavaScript (ES6+), HTML5, CSS3, SQL
+• Oyun Geliştirme: Unity Engine, 2D Oyun Fiziği, Rigidbody2D, C# Scripting, Tilemap
+• Araçlar & Kütüphaneler: Git / GitHub, VS Code, Web Audio API, Canvas API, GCC
+• İlgi & Araştırma: Oyun Fiziği, Algoritmik Mantık, Matematiksel Analiz, Savunma Sanayii
+
+==================================================
+05. DİLLER
+==================================================
+• Türkçe: Anadil
+• İngilizce: B2 / Profesyonel Teknik Düzey (%100 İngilizce Lisans Eğitimi)
+`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cvText).then(() => {
+        showToast();
+      }).catch(() => {
+        fallbackCopy(cvText);
+      });
+    } else {
+      fallbackCopy(cvText);
+    }
+  });
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast();
+    } catch (e) {
+      alert('Özgeçmiş panoya kopyalanamadı.');
+    }
+    document.body.removeChild(ta);
+  }
+
+  function showToast() {
+    if (!toast) return;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
   }
 }

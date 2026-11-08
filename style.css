@@ -2183,3 +2183,426 @@ body {
     right: 1rem;
   }
 }
+
+/* --------------------------------------------------------------------------
+   15. ÖZGEÇMİŞ / CV SAYFASI STİLLERİ (Interactive & Printable CV)
+   -------------------------------------------------------------------------- */
+.cv-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.cv-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.cv-actions-left {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cv-actions-right {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cv-sheet {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 3rem 3.5rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+  transition: border-color var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+  .cv-sheet {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.cv-header {
+  margin-bottom: 2rem;
+}
+
+.cv-name {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem 0;
+}
+
+.cv-role {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.cv-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cv-contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.cv-contact-item:hover {
+  color: var(--accent);
+}
+
+.cv-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 2rem 0;
+  border: none;
+}
+
+.cv-section {
+  margin-bottom: 2.2rem;
+}
+
+.cv-section:last-child {
+  margin-bottom: 0;
+}
+
+.cv-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid var(--border-color);
+}
+
+.cv-section-title .cv-tag {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.cv-summary-text {
+  color: var(--text-secondary);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.cv-entry {
+  margin-bottom: 1.6rem;
+}
+
+.cv-entry:last-child {
+  margin-bottom: 0;
+}
+
+.cv-entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+
+.cv-entry-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.cv-entry-date {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  background: var(--bg-surface-2);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.cv-entry-sub {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.cv-bullet-list {
+  margin: 0.5rem 0 0 1.25rem;
+  padding: 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.cv-bullet-list li {
+  margin-bottom: 0.35rem;
+}
+
+.cv-bullet-list li::marker {
+  color: var(--accent);
+}
+
+.cv-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.cv-skill-group {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+}
+
+.cv-skill-group-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cv-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cv-skill-tag {
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Kopyalandı Toast Bildirimi */
+.cv-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cv-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   16. YAZDIRMA VE PDF ÇIKTI MOTORU (@media print)
+   -------------------------------------------------------------------------- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Sitedeki tüm dinamik navigasyon ve widget bileşenlerini gizle */
+  header.site-header,
+  footer.site-footer,
+  .cv-actions-bar,
+  .bg-grid-pattern,
+  .music-player-widget,
+  .lofi-player-widget,
+  .floating-music-widget,
+  .terminal-modal,
+  .physics-overlay,
+  .back-to-top,
+  .cv-toast {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .cv-container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .cv-sheet {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    color: #111827 !important;
+  }
+
+  .cv-name {
+    color: #0f172a !important;
+    font-size: 20pt !important;
+    margin-bottom: 2pt !important;
+  }
+
+  .cv-role {
+    color: #1d4ed8 !important;
+    font-size: 11pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .cv-contact-row {
+    color: #475569 !important;
+    font-size: 8.5pt !important;
+    gap: 4pt 12pt !important;
+  }
+
+  .cv-contact-item {
+    color: #475569 !important;
+  }
+
+  .cv-divider {
+    background: #e2e8f0 !important;
+    margin: 10pt 0 !important;
+  }
+
+  .cv-section {
+    margin-bottom: 12pt !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cv-section-title {
+    color: #0f172a !important;
+    font-size: 10.5pt !important;
+    border-bottom: 1.5pt solid #1d4ed8 !important;
+    padding-bottom: 3pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .cv-section-title .cv-tag {
+    color: #1d4ed8 !important;
+  }
+
+  .cv-summary-text {
+    color: #334155 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.45 !important;
+  }
+
+  .cv-entry {
+    margin-bottom: 8pt !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cv-entry-title {
+    color: #0f172a !important;
+    font-size: 10.5pt !important;
+  }
+
+  .cv-entry-date {
+    background: transparent !important;
+    border: none !important;
+    color: #64748b !important;
+    font-size: 8.5pt !important;
+    padding: 0 !important;
+  }
+
+  .cv-entry-sub {
+    color: #1d4ed8 !important;
+    font-size: 9pt !important;
+    margin-bottom: 3pt !important;
+  }
+
+  .cv-bullet-list {
+    margin: 3pt 0 0 14pt !important;
+    color: #334155 !important;
+    font-size: 9pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .cv-bullet-list li {
+    margin-bottom: 2pt !important;
+  }
+
+  .cv-bullet-list li::marker {
+    color: #1d4ed8 !important;
+  }
+
+  .cv-skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8pt !important;
+  }
+
+  .cv-skill-group {
+    background: #f8fafc !important;
+    border: 1pt solid #e2e8f0 !important;
+    padding: 6pt 8pt !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cv-skill-group-title {
+    color: #0f172a !important;
+    font-size: 9pt !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .cv-skill-tag {
+    background: #ffffff !important;
+    border: 0.5pt solid #cbd5e1 !important;
+    color: #1e293b !important;
+    font-size: 8pt !important;
+    padding: 1pt 4pt !important;
+  }
+}
+

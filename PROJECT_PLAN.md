@@ -36,7 +36,7 @@
 
 6. **Çok Sayfalı Mimari Senkronizasyonu:**
    - Proje tek sayfa (SPA) karmaşasından uzaklaştırılmış, her konunun kendi bağımsız sayfası olan çok sayfalı bir mimariye kavuşturulmuştur.
-   - Ortak bileşenler (Navigasyon çubuğu, Footer, Müzik Çalar Widget'ı, Terminal Modalı, Fizik Tuvali) güncellendiğinde **tüm 5 sayfa (`index.html`, `about.html`, `projects.html`, `skills.html`, `contact.html`)** eksiksiz şekilde senkronize edilmelidir.
+   - Ortak bileşenler (Navigasyon çubuğu, Footer, Müzik Çalar Widget'ı, Terminal Modalı, Fizik Tuvali) güncellendiğinde **tüm 6 sayfa (`index.html`, `about.html`, `projects.html`, `skills.html`, `cv.html`, `contact.html`)** eksiksiz şekilde senkronize edilmelidir.
 
 7. **Doğrulama ve Git Disiplini:**
    - JavaScript dosyası değiştirildiğinde her zaman sözdizimi doğrulaması yapılmalıdır (`node -c script.js`).
@@ -135,10 +135,10 @@ Projeye ilerleyen zamanlarda eklenebilecek planlanmış aşamalar:
 | :--- | :--- | :--- | :--- |
 | **Faz 1** | Çok Sayfalı Mimari | Sitenin `about`, `projects`, `skills`, `contact` olarak ayrılması | ✅ Tamamlandı |
 | **Faz 2** | İmza Özellikler | Müzik çalar, Spotify listesi, ses ayarı, fizik simülasyonu, terminal | ✅ Tamamlandı |
-| **Faz 3** | Unity WebGL Entegrasyonu | Baran'ın Unity ile geliştirdiği 2D mini prototipin `projects.html` içine gömülmesi | ⏳ Planlandı |
-| **Faz 4** | Oyun Haberleri Dinamik Akışı | Baran'ın Node.js / Vanilla JS oyun haberleri projesinden son başlıkları çeken mini widget | ⏳ Planlandı |
-| **Faz 5** | Teknik Blog / Notlar Sayfası | `notes.html`: Saf Markdown formatında yazılmış teknik öğrenim ve C# mühendislik notları | ⏳ Planlandı |
-| **Faz 6** | Açık / Koyu Tema Seçicisi | Karanlık mat tema ile açık fildişi teması arasında geçiş sağlayan yerleşik buton | ⏳ Planlandı |
+| **Faz 3** | Etkileşimli & Yazdırılabilir CV | `cv.html`: ATS uyumlu profesyonel CV, tek tıkla PDF yazdırma ve panoya metin kopyalama | ✅ Tamamlandı |
+| **Faz 4** | Unity WebGL Entegrasyonu | Baran'ın Unity ile geliştirdiği 2D mini prototipin `projects.html` içine gömülmesi | ⏳ Planlandı |
+| **Faz 5** | Oyun Haberleri Dinamik Akışı | Baran'ın Node.js / Vanilla JS oyun haberleri projesinden son başlıkları çeken mini widget | ⏳ Planlandı |
+| **Faz 6** | Teknik Blog / Notlar Sayfası | `notes.html`: Saf Markdown formatında yazılmış teknik öğrenim ve C# mühendislik notları | ⏳ Planlandı |
 
 ---
 
