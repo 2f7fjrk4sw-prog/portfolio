@@ -135,66 +135,112 @@
     </div>
   </footer>
 
-  <!-- Floating Spotify & Music Widget -->
-  <aside class="music-player-widget" id="musicWidget" aria-label="Spotify & Müzik Çalar">
-    <!-- Spotify Pop-up Drawer -->
+  <!-- Floating Native Audio & Spotify Status Widget -->
+  <aside class="music-player-widget" id="musicWidget" aria-label="Portfolyo Müzik Çaları & Spotify Durumu">
+    <!-- Player Pop-up Drawer -->
     <div class="spotify-card" id="spotifyCard" aria-hidden="true">
+      <!-- Header -->
       <div class="spotify-card-header">
         <div class="spotify-brand">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#1db954">
-            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-          </svg>
-          <span class="spotify-title">Baran'ın Spotify Listesi</span>
+          <span class="music-note-icon">🎵</span>
+          <span class="spotify-title">Portfolyo Müzik Çaları</span>
         </div>
         <button id="spotifyCloseBtn" class="spotify-close-btn" type="button" aria-label="Kapat" title="Kapat">&times;</button>
       </div>
-      <div class="spotify-iframe-wrap">
+
+      <!-- Spotify "O An Ne Dinliyorum?" Canlı Durum Kartı -->
+      <div class="spotify-status-card" title="Baran'ın Spotify Dinleme Durumu">
+        <div class="spotify-status-top">
+          <div class="spotify-live-indicator">
+            <span class="spotify-live-dot"></span>
+            <span class="spotify-live-text">Spotify'da Ne Dinliyorum?</span>
+          </div>
+          <span class="spotify-badge">Canlı Durum</span>
+        </div>
+        <div class="spotify-track-row">
+          <div class="spotify-logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="#1db954">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            </svg>
+          </div>
+          <div class="spotify-meta">
+            <span class="spotify-playlist-title">Baran'ın Seçtikleri (Lofi & Study)</span>
+            <span class="spotify-playlist-subtitle">OSTİM Lab & Kodlama Listesi</span>
+          </div>
+          <a href="https://open.spotify.com/playlist/3DzI2diuYDRNeN0FC8duot?si=72bdabda5c8143d9" target="_blank" rel="noopener" class="spotify-listen-btn" title="Spotify'da Dinle">
+            <span>Listeye Git</span>
+            <span class="ext-icon">&#x2197;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Yerel Çalar Kontrolleri (Ses Çubuğuyla %100 Çalışan Dahili Motor) -->
+      <div class="native-player-box">
+        <div class="native-track-info">
+          <span class="track-status-pill" id="trackStatusPill">Durduruldu</span>
+          <span class="track-current-name" id="trackCurrentName">1. Gece Kodlaması (Chill Lofi)</span>
+        </div>
+
+        <div class="player-controls-row">
+          <button id="prevTrackBtn" class="track-btn" type="button" aria-label="Önceki Parça" title="Önceki Parça">⏮</button>
+          <button id="playPauseBtn" class="play-btn-circle" type="button" aria-label="Oynat / Durdur" title="Oynat / Durdur">
+            <span id="playPauseIcon">▶</span>
+          </button>
+          <button id="nextTrackBtn" class="track-btn" type="button" aria-label="Sonraki Parça" title="Sonraki Parça">⏭</button>
+        </div>
+
+        <!-- Ses Düzeyi Kontrol Çubuğu (Doğrudan Sesi Kısar / Açar) -->
+        <div class="music-volume-wrap" title="Doğrudan Ses Düzeyi Kontrolü (%0 - %100)">
+          <button id="volumeMuteBtn" class="volume-btn" type="button" aria-label="Sesi Kapat / Aç" title="Sesi Kapat / Aç">
+            <span id="volumeIcon">🔊</span>
+          </button>
+          <input 
+            type="range" 
+            id="volumeSlider" 
+            class="volume-slider" 
+            min="0" 
+            max="100" 
+            value="70" 
+            aria-label="Ses Düzeyi" 
+            title="Ses Düzeyi"
+          />
+          <span class="volume-val" id="volumeVal">70%</span>
+        </div>
+      </div>
+
+      <!-- Footer: Spotify Embed Göster/Gizle Butonu -->
+      <div class="spotify-card-footer">
+        <button id="spotifyEmbedToggleBtn" class="spotify-embed-toggle" type="button">
+          <span>Mini Spotify Oynatıcıyı Göster</span>
+          <span class="toggle-arrow">&#x25BC;</span>
+        </button>
+      </div>
+
+      <!-- Açılabilir Spotify Embed (Opsiyonel) -->
+      <div class="spotify-embed-collapsible" id="spotifyEmbedWrap" style="display: none;">
         <iframe 
-          style="border-radius:12px" 
+          style="border-radius:12px; margin-top: 0.65rem;" 
           src="https://open.spotify.com/embed/playlist/3DzI2diuYDRNeN0FC8duot?utm_source=generator&theme=0" 
           width="100%" 
-          height="152" 
+          height="80" 
           frameBorder="0" 
           allowfullscreen="" 
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
           loading="lazy">
         </iframe>
       </div>
-
-      <!-- Ses Düzeyi Kontrol Çubuğu (Volume Control) -->
-      <div class="music-volume-wrap" title="Ana Ses Düzeyi (Lofi Synth & Ses Efektleri)">
-        <button id="volumeMuteBtn" class="volume-btn" type="button" aria-label="Sesi Kapat / Aç" title="Sesi Kapat / Aç">
-          <span id="volumeIcon">🔊</span>
-        </button>
-        <input 
-          type="range" 
-          id="volumeSlider" 
-          class="volume-slider" 
-          min="0" 
-          max="100" 
-          value="70" 
-          aria-label="Ses Düzeyi" 
-          title="Ses Düzeyi"
-        />
-        <span class="volume-val" id="volumeVal">70%</span>
-      </div>
-
-      <div class="spotify-card-footer">
-        <span class="spotify-hint">Shuffle / Rastgele Çal</span>
-        <button id="synthFallbackBtn" class="synth-toggle-link" type="button">Lofi Synth Modu</button>
-      </div>
     </div>
 
-    <!-- Floating Toggle Pill -->
-    <button id="musicToggleBtn" class="music-main-btn" type="button" aria-label="Spotify Çalma Listesini Aç/Kapat" title="Baran'ın Spotify Listesini Dinle">
+    <!-- Floating Toggle Pill Button -->
+    <button id="musicToggleBtn" class="music-main-btn" type="button" aria-label="Müzik Çaları ve Spotify Durumunu Aç/Kapat" title="Müzik Çaları Aç/Kapat">
       <div class="music-icon-box">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-        </svg>
+        <span id="pillPlayIcon">▶</span>
       </div>
       <div class="music-info">
-        <span class="music-title">Spotify Listem</span>
-        <span class="music-subtitle">Rastgele Çal / Shuffle</span>
+        <span class="music-title" id="pillTrackTitle">Gece Kodlaması</span>
+        <span class="music-subtitle">
+          <span class="live-dot-mini"></span> Spotify: Baran Dinliyor
+        </span>
       </div>
       <div class="eq-visualizer" aria-hidden="true">
         <span class="eq-bar"></span>
@@ -203,6 +249,7 @@
         <span class="eq-bar"></span>
       </div>
     </button>
+  </aside>
   </aside>
 
   <!-- Terminal Modal (Feature 4) -->

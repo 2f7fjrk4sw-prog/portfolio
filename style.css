@@ -1242,11 +1242,14 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   9. SPOTIFY & SES ÇALAR WIDGET'I (Feature 1 - Spotify + Web Audio API)
+   9. DAHİLİ SES ÇALAR & SPOTIFY CANLI DURUM WIDGET'I (Feature 1 - Option 2)
    --------------------------------------------------------------------------
    Açıklama:
-   Kullanıcının isteği üzerine Baran'ın kişisel Spotify listesini ve Web Audio
-   API tabanlı lofi sentezleyiciyi barındıran yüzen (floating) müzik çalar bileşeni.
+   Kullanıcının tercih ettiği 2. Seçenek mimarisi:
+   1. Yerel Müzik Çalar: Web Audio API tabanlı analog lofi motoru doğrudan
+      sayfa içerisindeki ses çubuğuna (%0 - %100) ve parça geçiş kontrollerine bağlıdır.
+   2. Spotify Durum Kartı: Baran'ın Spotify'da aktif olarak dinlediği çalma
+      listesini ("Baran'ın Seçtikleri") ve canlı durum rozetini sergiler.
    -------------------------------------------------------------------------- */
 .music-player-widget,
 .lofi-player-widget {
@@ -1259,17 +1262,17 @@ body {
   align-items: flex-end;
 }
 
-/* Spotify Açılır Kartı (Pop-up Drawer) */
+/* Açılır Müzik & Spotify Kartı (Drawer Window) */
 .spotify-card {
-  width: 350px;
+  width: 360px;
   max-width: calc(100vw - 2.5rem);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 0.85rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 0.95rem;
   margin-bottom: 0.75rem;
   opacity: 0;
   visibility: hidden;
@@ -1291,7 +1294,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .spotify-brand {
@@ -1300,8 +1305,8 @@ body {
   gap: 0.5rem;
 }
 
-.spotify-brand svg {
-  flex-shrink: 0;
+.music-note-icon {
+  font-size: 1rem;
 }
 
 .spotify-title {
@@ -1328,26 +1333,226 @@ body {
   background: var(--bg-surface-soft);
 }
 
-.spotify-iframe-wrap {
-  width: 100%;
+/* --------------------------------------------------------------------------
+   SPOTIFY CANLI DİNLEME DURUM KARTI ("O An Ne Dinliyorum?")
+   -------------------------------------------------------------------------- */
+.spotify-status-card {
+  background: rgba(29, 185, 84, 0.05);
+  border: 1px solid rgba(29, 185, 84, 0.2);
   border-radius: 12px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: border-color var(--transition-fast);
+}
+
+.spotify-status-card:hover {
+  border-color: rgba(29, 185, 84, 0.4);
+}
+
+.spotify-status-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.spotify-live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.spotify-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1db954;
+  box-shadow: 0 0 8px #1db954;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 12px #1db954; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.spotify-live-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1db954;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.spotify-badge {
+  font-size: 0.65rem;
+  color: var(--text-faint);
+  background: var(--bg-surface);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+}
+
+.spotify-track-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.spotify-logo-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotify-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   overflow: hidden;
-  background: #121212;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.spotify-iframe-wrap iframe {
-  display: block;
+.spotify-playlist-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Ses Düzeyi Kontrol Satırı (Volume Slider & Mute Button) */
+.spotify-playlist-subtitle {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.spotify-listen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  background: rgba(29, 185, 84, 0.15);
+  color: #1db954;
+  border: 1px solid rgba(29, 185, 84, 0.3);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.spotify-listen-btn:hover {
+  background: #1db954;
+  color: #0b0d10;
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   YEREL MÜZİK ÇALAR KUTUSU (Ses Çubuğuyla %100 Çalışan Çekirdek)
+   -------------------------------------------------------------------------- */
+.native-player-box {
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.native-track-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.track-status-pill {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+  background: var(--border-color);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.track-status-pill.playing {
+  background: rgba(29, 185, 84, 0.2);
+  color: #1db954;
+  border: 1px solid rgba(29, 185, 84, 0.4);
+}
+
+.track-current-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Oynatma, Durdurma & Parça Değiştirme Butonları */
+.player-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.15rem;
+}
+
+.track-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.track-btn:hover {
+  border-color: #1db954;
+  color: #1db954;
+  transform: scale(1.1);
+}
+
+.play-btn-circle {
+  background: #1db954;
+  border: none;
+  color: #0b0d10;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+  transition: all var(--transition-fast);
+}
+
+.play-btn-circle:hover {
+  transform: scale(1.12);
+  background: #1ed760;
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.55);
+}
+
+/* Ses Düzeyi Kontrol Satırı (Volume Slider) */
 .music-volume-wrap {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  margin-top: 0.65rem;
-  padding: 0.45rem 0.65rem;
-  background: var(--bg-surface-soft);
+  padding: 0.35rem 0.55rem;
+  background: var(--bg-surface);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
 }
@@ -1364,12 +1569,11 @@ body {
   justify-content: center;
   border-radius: 4px;
   color: var(--text-main);
-  transition: transform var(--transition-fast), background var(--transition-fast);
+  transition: transform var(--transition-fast);
 }
 
 .volume-btn:hover {
   transform: scale(1.15);
-  background: var(--bg-surface);
 }
 
 .volume-slider {
@@ -1388,7 +1592,6 @@ body {
   background: var(--border-hover);
 }
 
-/* Chrome / Safari / Edge Range Thumb */
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1406,7 +1609,6 @@ body {
   background: #1ed760;
 }
 
-/* Firefox Range Thumb */
 .volume-slider::-moz-range-thumb {
   width: 14px;
   height: 14px;
@@ -1432,54 +1634,44 @@ body {
   user-select: none;
 }
 
+/* Çekmece Altlığı (Footer Toggle) */
 .spotify-card-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 0.65rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.45rem;
 }
 
-.spotify-hint {
-  font-size: 0.72rem;
-  color: #1db954;
-  font-family: var(--font-mono);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.spotify-hint::before {
-  content: "🔀";
-  font-size: 0.75rem;
-}
-
-.synth-toggle-link {
-  background: var(--bg-surface-soft);
-  border: 1px solid var(--border-subtle);
+.spotify-embed-toggle {
+  background: transparent;
+  border: none;
   color: var(--text-muted);
   font-size: 0.72rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-pill);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-family: var(--font-sans);
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
 }
 
-.synth-toggle-link:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-soft);
+.spotify-embed-toggle:hover {
+  color: #1db954;
 }
 
-.synth-toggle-link.active {
-  color: #ffffff;
-  background: var(--accent);
-  border-color: var(--accent);
+.toggle-arrow {
+  font-size: 0.65rem;
+  transition: transform var(--transition-fast);
 }
 
-/* Yüzen Müzik Düğmesi (Pill) */
+.spotify-embed-toggle.active .toggle-arrow {
+  transform: rotate(180deg);
+}
+
+/* --------------------------------------------------------------------------
+   YÜZEN ANA DÜĞME (FLOATING PILL BUTTON)
+   -------------------------------------------------------------------------- */
 .music-main-btn,
 .lofi-main-btn {
   display: flex;
@@ -1525,10 +1717,6 @@ body {
   color: #0b0d10;
 }
 
-.lofi-pause-icon { display: none; }
-.lofi-player-widget.playing .lofi-play-icon { display: none; }
-.lofi-player-widget.playing .lofi-pause-icon { display: block; }
-
 .music-info,
 .lofi-info {
   display: flex;
@@ -1548,6 +1736,18 @@ body {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.live-dot-mini {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1db954;
+  box-shadow: 0 0 5px #1db954;
+  display: inline-block;
 }
 
 /* Dans Eden Ekolayzır Barları (Visualizer) */

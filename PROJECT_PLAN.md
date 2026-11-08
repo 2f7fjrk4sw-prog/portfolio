@@ -84,16 +84,17 @@ portfolio/
 
 Sitede ziyaretçilerin dikkatini çeken, doğrudan mühendislik kabiliyetini yansıtan 4 özgün özellik bulunmaktadır:
 
-### 4.1. Çok Fonksiyonlu Müzik Çalar & Ses Kontrolü (Feature 1)
-- **Spotify Listesi:** Sağ alttaki yüzen düğmeye basıldığında Baran'ın kişisel çalma listesini içeren kart yukarı doğru açılır (`iframe` embed).
-- **Rastgele / Shuffle Desteği:** Ziyaretçiler listeyi diledikleri gibi karışık veya sıralı çalabilir.
-- **Web Audio API Lofi Synthesizer (Yedek & Retro Mod):**
-  - Harici ses dosyası (MP3/WAV) gerektirmeden 0 byte ile tarayıcıda çalışan matematiksel analog ses sentezleyicisi.
-  - `Am7 -> Fmaj7 -> Cmaj7 -> G` akor döngüsü, lowpass biquad filtresi ($680\text{ Hz}$) ve pentatonik melodi çanları üretir.
-- **Master Ses Denetimi (Volume Slider & Mute):**
-  - Donanım düzeyinde ses kontrolü sağlayan `MasterGainNode` mimarisi.
-  - Çekmece içinde `%0 - %100` ses kaydırma çubuğu, tek tıkla sessize alma (`🔊` $\leftrightarrow$ `🔇`) butonu.
-  - Seçilen ses düzeyi `localStorage` üzerinde saklanarak sayfalar arası gezinmede korunur.
+### 4.1. Yerel Müzik Çalar & Spotify Canlı Durumu (Feature 1 - Option 2 Mimarisi)
+- **Yerel Müzik Çalar (Dahili Ses Motoru):**
+  - Web Audio API tabanlı, 0 kb harici ses dosyasıyla çalışan 3 farklı analog lofi parça (`1. Gece Kodlaması`, `2. Yağmurlu Ankara`, `3. Oyun Laboratuvarı`).
+  - Çalma listesi kontrolleri: Oynat/Durdur (`▶`/`⏸`), Sonraki Parça (`⏭`), Önceki Parça (`⏮`).
+- **Doğrudan Ses Düzeyi Kontrolü (Volume Slider & Mute):**
+  - Donanım düzeyinde ses kontrolü sağlayan Web Audio `MasterGainNode` mimarisi.
+  - Sitedeki ses çubuğu (%0 - %100) yerel müziğin sesini **doğrudan açıp kısar**.
+  - Tek tıkla sessize alma (`🔊` $\leftrightarrow$ `🔇`) ve `localStorage` kalıcılığı ile sayfalar arası kesintisiz deneyim.
+- **Spotify "O An Ne Dinliyorum?" Canlı Durum Kartı:**
+  - Baran'ın Spotify'daki anlık müzik zevkini gösteren canlı durum rozeti (`🟢 Canlı Durum`).
+  - Baran'ın özel çalma listesi bağlantısı (`https://open.spotify.com/playlist/3DzI2diuYDRNeN0FC8duot`) ve istenirse açılabilen mini gömülü çalar.
 
 ### 4.2. 2D Gravity & Fizik Motoru — Unity Homage (Feature 2)
 - Saf HTML5 Canvas ve Euler hareket entegrasyonu ile yazılmıştır.

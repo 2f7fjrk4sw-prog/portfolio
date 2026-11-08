@@ -249,19 +249,15 @@ function initLiveTimeAndStatus() {
 }
 
 /* ==========================================================================
-   5. SPOTIFY ÇALAR & WEB AUDIO API LOFI SYNTHESIZER (Feature 1)
+   5. YEREL SES ÇALAR (SES ÇUBUĞU İLE %100 UYUMLU) & SPOTIFY DURUMU (Feature 1)
    ==========================================================================
    Açıklama:
-   Kullanıcının isteğiyle entegre edilen bu modül iki ses kaynağı ve hassas
-   ses düzeyi (Volume) kontrolü sunar:
-   1. Baran'ın Seçilmiş Spotify Listesi: Resmi Spotify Embed iframe aracılığıyla
-      açılır; kullanıcılar listeyi çalabilir veya shuffle/karışık çalma modunda
-      dinleyebilir.
-   2. Web Audio API Sentezleyici (0 byte harici ses): Kullanıcı isterse analog
-      retro lofi synth moduna geçip tarayıcı içinde üretilen akorları dinleyebilir.
-   3. Ana Ses Kontrolü (Master Gain): Web Audio API GainNode mimarisi ve arayüzdeki
-      ses çubuğu (slider) ile kullanıcı sesi 0-100% arasında kısabilir, açabilir
-      veya sessize (mute) alabilir. Tercih edilen ses düzeyi localStorage'a kaydedilir.
+   Kullanıcının isteğiyle entegre edilen bu sistem 2 temel parçadan oluşur:
+   1. Yerel Müzik Çalar: Web Audio API tabanlı, 0 kb harici dosya kullanan
+      ve 3 farklı chill parçayı çalabilen müzik motoru. Sitedeki ses çubuğu
+      (Master GainNode) bu motorun sesini %0 ile %100 arasında doğrudan kısar ve açar.
+   2. Spotify "O An Ne Dinliyorum?" Rozeti: Baran'ın Spotify'daki anlık dinleme
+      durumunu, canlı yeşil göstergesini ve kişisel çalma listesini sergiler.
    ========================================================================== */
 let audioCtx = null;
 let isAudioPlaying = false;
@@ -273,71 +269,152 @@ let masterGainNode = null;
 let masterVolume = 0.7;    // Varsayılan ses seviyesi: %70
 let previousVolume = 0.7;  // Mute (sessize alma) öncesi hatırlanan ses seviyesi
 
+// Çoklu Çalma Listesi (Web Audio API ile dinamik sentezlenen analog parçalar)
+const playlistTracks = [
+  {
+    title: "1. Gece Kodlaması (Chill Lofi)",
+    shortTitle: "Gece Kodlaması",
+    tempo: 2000,
+    filterFreq: 680,
+    progression: [
+      [220.00, 261.63, 329.63, 392.00], // Am7  (La3, Do4, Mi4, Sol4)
+      [174.61, 220.00, 261.63, 329.63], // Fmaj7 (Fa3, La3, Do4, Mi4)
+      [130.81, 164.81, 196.00, 246.94], // Cmaj7 (Do3, Mi3, Sol3, Si3)
+      [196.00, 246.94, 293.66, 392.00]  // G     (Sol3, Si3, Re4, Sol4)
+    ],
+    melody: [440.00, 493.88, 523.25, 659.25, 783.99, 880.00]
+  },
+  {
+    title: "2. Yağmurlu Ankara (Analog Jazz)",
+    shortTitle: "Yağmurlu Ankara",
+    tempo: 2200,
+    filterFreq: 540,
+    progression: [
+      [146.83, 174.61, 220.00, 261.63], // Dm7  (Re3, Fa3, La3, Do4)
+      [196.00, 246.94, 293.66, 349.23], // G7   (Sol3, Si3, Re4, Fa4)
+      [130.81, 164.81, 196.00, 246.94], // Cmaj7 (Do3, Mi3, Sol3, Si3)
+      [220.00, 277.18, 329.63, 392.00]  // A7   (La3, Do#4, Mi4, Sol4)
+    ],
+    melody: [349.23, 392.00, 440.00, 523.25, 587.33, 698.46]
+  },
+  {
+    title: "3. Oyun Laboratuvarı (Chiptune Lofi)",
+    shortTitle: "Oyun Laboratuvarı",
+    tempo: 1800,
+    filterFreq: 820,
+    progression: [
+      [164.81, 196.00, 246.94, 293.66], // Em7  (Mi3, Sol3, Si3, Re4)
+      [130.81, 164.81, 196.00, 246.94], // Cmaj7 (Do3, Mi3, Sol3, Si3)
+      [196.00, 246.94, 293.66, 392.00], // G     (Sol3, Si3, Re4, Sol4)
+      [146.83, 220.00, 293.66, 369.99]  // D     (Re3, La3, Re4, Fa#4)
+    ],
+    melody: [587.33, 659.25, 739.99, 880.00, 987.77, 1174.66]
+  }
+];
+
+let currentTrackIndex = 0; // Başlangıç parçası
+
 function initLofiSynthesizer() {
   // DOM elementlerini seçiyoruz
   const musicWidget = document.getElementById('musicWidget') || document.getElementById('lofiWidget');
   const toggleBtn = document.getElementById('musicToggleBtn') || document.getElementById('lofiToggleBtn');
   const spotifyCard = document.getElementById('spotifyCard');
   const spotifyCloseBtn = document.getElementById('spotifyCloseBtn');
-  const synthFallbackBtn = document.getElementById('synthFallbackBtn');
 
-  // Ses düzeyi denetim arayüzü elemanları
+  // Yerel Çalar Kontrolleri
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playPauseIcon = document.getElementById('playPauseIcon');
+  const pillPlayIcon = document.getElementById('pillPlayIcon');
+  const prevTrackBtn = document.getElementById('prevTrackBtn');
+  const nextTrackBtn = document.getElementById('nextTrackBtn');
+  const trackStatusPill = document.getElementById('trackStatusPill');
+  const trackCurrentName = document.getElementById('trackCurrentName');
+  const pillTrackTitle = document.getElementById('pillTrackTitle');
+
+  // Ses Düzeyi Kontrol Elemanları
   const volumeSlider = document.getElementById('volumeSlider');
   const volumeVal = document.getElementById('volumeVal');
   const volumeMuteBtn = document.getElementById('volumeMuteBtn');
   const volumeIcon = document.getElementById('volumeIcon');
 
+  // Mini Spotify Oynatıcıyı Göster/Gizle Butonu
+  const spotifyEmbedToggleBtn = document.getElementById('spotifyEmbedToggleBtn');
+  const spotifyEmbedWrap = document.getElementById('spotifyEmbedWrap');
+
   if (!musicWidget || !toggleBtn) return;
 
   // --------------------------------------------------------------------------
-  // A) SPOTIFY KARTI AÇILIR/KAPANIR ÇEKMECE YÖNETİMİ
+  // A) ÇEKMECE PENCERESİ AÇILIR / KAPANIR YÖNETİMİ
   // --------------------------------------------------------------------------
-  function openSpotifyDrawer() {
+  function openDrawer() {
     if (!spotifyCard) return;
     spotifyCard.classList.add('open');
     musicWidget.classList.add('open');
     spotifyCard.setAttribute('aria-hidden', 'false');
   }
 
-  function closeSpotifyDrawer() {
+  function closeDrawer() {
     if (!spotifyCard) return;
     spotifyCard.classList.remove('open');
     musicWidget.classList.remove('open');
     spotifyCard.setAttribute('aria-hidden', 'true');
   }
 
-  function toggleSpotifyDrawer() {
+  function toggleDrawer() {
     if (!spotifyCard) return;
     const isOpen = spotifyCard.classList.contains('open');
     if (isOpen) {
-      closeSpotifyDrawer();
+      closeDrawer();
     } else {
-      openSpotifyDrawer();
+      openDrawer();
     }
   }
 
-  // Spotify kapatma butonu (X) tıklandığında kartı kapat
   if (spotifyCloseBtn) {
     spotifyCloseBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      closeSpotifyDrawer();
+      closeDrawer();
+    });
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    toggleDrawer();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (spotifyCard && spotifyCard.classList.contains('open')) {
+      if (!musicWidget.contains(e.target)) {
+        closeDrawer();
+      }
+    }
+  });
+
+  // Opsiyonel Mini Spotify Embed Aç/Kapat Butonu
+  if (spotifyEmbedToggleBtn && spotifyEmbedWrap) {
+    spotifyEmbedToggleBtn.addEventListener('click', () => {
+      const isVisible = spotifyEmbedWrap.style.display !== 'none';
+      if (isVisible) {
+        spotifyEmbedWrap.style.display = 'none';
+        spotifyEmbedToggleBtn.classList.remove('active');
+        spotifyEmbedToggleBtn.querySelector('span:first-child').textContent = 'Mini Spotify Oynatıcıyı Göster';
+      } else {
+        spotifyEmbedWrap.style.display = 'block';
+        spotifyEmbedToggleBtn.classList.add('active');
+        spotifyEmbedToggleBtn.querySelector('span:first-child').textContent = 'Mini Spotify Oynatıcıyı Gizle';
+      }
     });
   }
 
   // --------------------------------------------------------------------------
-  // B) SES DÜZEYİ (VOLUME) YÖNETİMİ & LOCALSTORAGE KALICILIĞI
+  // B) SES DÜZEYİ (VOLUME) YÖNETİMİ & DOĞRUDAN GAIN KONTROLÜ
   // --------------------------------------------------------------------------
-  // Tarayıcı hafızasından kayıtlı ses düzeyini oku
   try {
     const savedVol = localStorage.getItem('baran_portfolio_volume');
     if (savedVol !== null && !isNaN(parseFloat(savedVol))) {
       masterVolume = Math.max(0, Math.min(1, parseFloat(savedVol)));
     }
-  } catch (err) {
-    // Çerez / localStorage erişim engellerinde sessizce varsayılanı kullan
-  }
+  } catch (err) {}
 
-  // Ses arayüzünü (slider, yüzde metni, ikon) senkronize eden fonksiyon
   function updateVolumeUI(vol) {
     const percent = Math.round(vol * 100);
     if (volumeSlider) {
@@ -358,7 +435,7 @@ function initLofiSynthesizer() {
     }
   }
 
-  // Ses düzeyini değiştiren çekirdek fonksiyon (0.0 ile 1.0 arası değer alır)
+  // Doğrudan Web Audio API masterGainNode düğümünü günceller (Sesi anında açar/kısar)
   function setVolume(vol, saveToStorage = true) {
     const clamped = Math.max(0, Math.min(1, parseFloat(vol)));
     masterVolume = clamped;
@@ -369,7 +446,6 @@ function initLofiSynthesizer() {
       } catch (err) {}
     }
 
-    // Web Audio API GainNode üzerinden anlık ses şiddetini uygula
     if (audioCtx && masterGainNode) {
       masterGainNode.gain.setValueAtTime(masterVolume, audioCtx.currentTime);
     }
@@ -377,21 +453,16 @@ function initLofiSynthesizer() {
     updateVolumeUI(masterVolume);
   }
 
-  // Arayüz başlangıç değerlerini güncelle
   updateVolumeUI(masterVolume);
 
-  // Slider sürükleme / değiştirme olayı
   if (volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
       const newVol = parseFloat(e.target.value) / 100;
-      if (newVol > 0) {
-        previousVolume = newVol;
-      }
+      if (newVol > 0) previousVolume = newVol;
       setVolume(newVol);
     });
   }
 
-  // Sesi Kapat / Aç (Mute Toggle) buton dinleyicisi
   if (volumeMuteBtn) {
     volumeMuteBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -405,9 +476,8 @@ function initLofiSynthesizer() {
   }
 
   // --------------------------------------------------------------------------
-  // C) WEB AUDIO API LOFI SYNTHESIZER MOTORU (0 KB SES / ANALOG TINILAR)
+  // C) WEB AUDIO API SENTEZLEYİCİSİ & PARÇA DEĞİŞTİRME MOTORU
   // --------------------------------------------------------------------------
-  // AudioContext ve MasterGainNode'un güvenli şekilde başlatılmasını sağlar
   function ensureAudioContext() {
     if (!audioCtx) {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -424,45 +494,38 @@ function initLofiSynthesizer() {
     return audioCtx;
   }
 
-  // Lofi Müzik Akor Dizilimi (Frekanslar Hz cinsindendir):
-  // Sırasıyla: Am7 -> Fmaj7 -> Cmaj7 -> G
-  const chordProgression = [
-    [220.00, 261.63, 329.63, 392.00], // Am7  (La3, Do4, Mi4, Sol4)
-    [174.61, 220.00, 261.63, 329.63], // Fmaj7 (Fa3, La3, Do4, Mi4)
-    [130.81, 164.81, 196.00, 246.94], // Cmaj7 (Do3, Mi3, Sol3, Si3)
-    [196.00, 246.94, 293.66, 392.00]  // G     (Sol3, Si3, Re4, Sol4)
-  ];
+  // Parça bilgilerini arayüzdeki başlıklar ile senkronize et
+  function updateTrackDisplay() {
+    const track = playlistTracks[currentTrackIndex];
+    if (trackCurrentName) trackCurrentName.textContent = track.title;
+    if (pillTrackTitle) pillTrackTitle.textContent = track.shortTitle;
+  }
 
-  // Pentatonik ölçekteki hafif melodi çan frekansları
-  const pentatonicMelody = [440.00, 493.88, 523.25, 659.25, 783.99, 880.00];
-
-  // Bir akor kümesini ve rastgele melodi notasını ses dalgasına dönüştüren fonksiyon
-  function playChord(chord, duration = 1.9) {
+  // Tek bir akoru ve pentatonik melodi çanını ses dalgasına dönüştüren çekirdek fonksiyon
+  function playChord(chord, duration = 1.8) {
     ensureAudioContext();
     if (!audioCtx || !masterGainNode) return;
     const now = audioCtx.currentTime;
+    const currentTrack = playlistTracks[currentTrackIndex];
 
-    // 1. Sıcaklık Filtresi (Biquad Lowpass Filter):
-    // Dijital sertliği kırıp kaset/plak (vinyl) sıcaklığı vermek için 680 Hz üstünü yumuşatır
+    // 1. Düşük Geçiren Filtre (Lowpass Filter): Sıcak lofi tınısı
     const filter = audioCtx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(680, now);
-    filter.Q.setValueAtTime(1.8, now);
-    // Doğrudan hoparlöre değil, kullanıcının ayarladığı ana ses düğümüne (masterGainNode) bağla
+    filter.frequency.setValueAtTime(currentTrack.filterFreq || 650, now);
+    filter.Q.setValueAtTime(1.6, now);
+    // Filtreyi doğrudan kullanıcının kontrolündeki Master GainNode'a bağlıyoruz
     filter.connect(masterGainNode);
 
-    // 2. Akorun her bir sesini osilatörlerle üret
+    // 2. Akor frekanslarını osilatörler ile çal
     chord.forEach((freq, idx) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
-      // Sıcak elektro-piyano tınısı için üçgen (triangle) ve sinüs (sine) dalga karışımı
       osc.type = idx % 2 === 0 ? 'triangle' : 'sine';
       osc.frequency.setValueAtTime(freq, now);
 
-      // ADSR Ses Zarfı (Yavaş yükselme - Linear Attack, yumuşak sönümlenme - Exponential Decay)
       gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.055, now + 0.12);
+      gain.gain.linearRampToValueAtTime(0.05, now + 0.12);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
       osc.connect(gain);
@@ -472,17 +535,17 @@ function initLofiSynthesizer() {
       osc.stop(now + duration);
     });
 
-    // 3. Olasılıksal hafif melodi çanı (%65 ihtimalle arkada çalar)
-    if (Math.random() > 0.35) {
+    // 3. Hafif Rastgele Melodi Çanı
+    if (Math.random() > 0.35 && currentTrack.melody.length) {
       const bellOsc = audioCtx.createOscillator();
       const bellGain = audioCtx.createGain();
-      const randomNote = pentatonicMelody[Math.floor(Math.random() * pentatonicMelody.length)];
+      const randomNote = currentTrack.melody[Math.floor(Math.random() * currentTrack.melody.length)];
 
       bellOsc.type = 'sine';
       bellOsc.frequency.setValueAtTime(randomNote, now + 0.25);
 
       bellGain.gain.setValueAtTime(0.001, now + 0.25);
-      bellGain.gain.linearRampToValueAtTime(0.03, now + 0.28);
+      bellGain.gain.linearRampToValueAtTime(0.028, now + 0.28);
       bellGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
 
       bellOsc.connect(bellGain);
@@ -493,36 +556,43 @@ function initLofiSynthesizer() {
     }
   }
 
-  // Müziği başlatan fonksiyon (Tarayıcı güvenlik politikası gereği kullanıcı tıklamasıyla başlar)
-  function startLofi() {
+  // Müziği başlatan fonksiyon
+  function startPlayback() {
     ensureAudioContext();
 
     isAudioPlaying = true;
-    musicWidget.classList.add('playing'); // Ekolayzır animasyonunu çalıştır
-    if (synthFallbackBtn) {
-      synthFallbackBtn.classList.add('active');
-      synthFallbackBtn.textContent = 'Synth Durdur ⏸';
+    musicWidget.classList.add('playing');
+    if (playPauseIcon) playPauseIcon.textContent = '⏸';
+    if (pillPlayIcon) pillPlayIcon.textContent = '⏸';
+    if (trackStatusPill) {
+      trackStatusPill.textContent = 'Çalıyor';
+      trackStatusPill.classList.add('playing');
     }
 
-    // İlk akoru hemen çal
-    playChord(chordProgression[chordIndex]);
-    chordIndex = (chordIndex + 1) % chordProgression.length;
+    const track = playlistTracks[currentTrackIndex];
+    chordIndex = 0;
 
-    // Her 2 saniyede bir sonraki akora geç ve sonsuz döngü kur
+    // İlk akoru çal
+    playChord(track.progression[chordIndex]);
+    chordIndex = (chordIndex + 1) % track.progression.length;
+
     if (lofiTimer) clearInterval(lofiTimer);
     lofiTimer = setInterval(() => {
-      playChord(chordProgression[chordIndex]);
-      chordIndex = (chordIndex + 1) % chordProgression.length;
-    }, 2000);
+      const activeTrack = playlistTracks[currentTrackIndex];
+      playChord(activeTrack.progression[chordIndex]);
+      chordIndex = (chordIndex + 1) % activeTrack.progression.length;
+    }, track.tempo || 2000);
   }
 
   // Müziği durduran fonksiyon
-  function stopLofi() {
+  function stopPlayback() {
     isAudioPlaying = false;
     musicWidget.classList.remove('playing');
-    if (synthFallbackBtn) {
-      synthFallbackBtn.classList.remove('active');
-      synthFallbackBtn.textContent = 'Lofi Synth Modu';
+    if (playPauseIcon) playPauseIcon.textContent = '▶';
+    if (pillPlayIcon) pillPlayIcon.textContent = '▶';
+    if (trackStatusPill) {
+      trackStatusPill.textContent = 'Durduruldu';
+      trackStatusPill.classList.remove('playing');
     }
     if (lofiTimer) {
       clearInterval(lofiTimer);
@@ -530,80 +600,81 @@ function initLofiSynthesizer() {
     }
   }
 
-  // Lofi synth tetikleme butonu (Drawer altındaki bağlantı)
-  if (synthFallbackBtn) {
-    synthFallbackBtn.addEventListener('click', () => {
+  // Oynat / Durdur Butonu Dinleyicisi
+  if (playPauseBtn) {
+    playPauseBtn.addEventListener('click', () => {
       if (isAudioPlaying) {
-        stopLofi();
+        stopPlayback();
       } else {
-        startLofi();
+        startPlayback();
       }
     });
   }
 
-  // --------------------------------------------------------------------------
-  // D) ANA YÜZEN DÜĞME (MAIN PILL BUTTON) ETKİLEŞİMİ
-  // --------------------------------------------------------------------------
-  toggleBtn.addEventListener('click', () => {
-    // Eğer Spotify kartı varsa çekmeceyi aç/kapat
-    if (spotifyCard) {
-      toggleSpotifyDrawer();
-    } else {
-      // Yedek senaryo: Doğrudan lofi synth'i başlat/durdur
+  // Sonraki Parçaya Geçiş
+  if (nextTrackBtn) {
+    nextTrackBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+      updateTrackDisplay();
       if (isAudioPlaying) {
-        stopLofi();
-      } else {
-        startLofi();
+        startPlayback(); // Yeni parçayı baştan başlat
       }
-    }
-  });
+    });
+  }
 
-  // Sayfa dışına tıklandığında Spotify çekmecesini otomatik kapat
-  document.addEventListener('click', (e) => {
-    if (spotifyCard && spotifyCard.classList.contains('open')) {
-      if (!musicWidget.contains(e.target)) {
-        closeSpotifyDrawer();
+  // Önceki Parçaya Geçiş
+  if (prevTrackBtn) {
+    prevTrackBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
+      updateTrackDisplay();
+      if (isAudioPlaying) {
+        startPlayback();
       }
-    }
-  });
+    });
+  }
+
+  // Başlangıç ekranını güncelle
+  updateTrackDisplay();
 
   // --------------------------------------------------------------------------
-  // E) TERMİNAL & GLOBAL KÖPRÜLERİ (CLI ENTEGRASYONU)
+  // D) TERMİNAL & GLOBAL KÖPRÜLERİ (CLI ENTEGRASYONU)
   // --------------------------------------------------------------------------
-  // Terminalden 'spotify' komutu girildiğinde:
+  window.toggleMusicFromTerminal = function() {
+    if (isAudioPlaying) {
+      stopPlayback();
+      return 'Müzik duraklatıldı.';
+    } else {
+      startPlayback();
+      return `Müzik başlatıldı! Çalan: "${playlistTracks[currentTrackIndex].title}" (Ses: %${Math.round(masterVolume * 100)})`;
+    }
+  };
+
+  window.nextTrackFromTerminal = function() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+    updateTrackDisplay();
+    if (isAudioPlaying) startPlayback();
+    return `Sonraki parçaya geçildi: "${playlistTracks[currentTrackIndex].title}"`;
+  };
+
+  window.prevTrackFromTerminal = function() {
+    currentTrackIndex = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
+    updateTrackDisplay();
+    if (isAudioPlaying) startPlayback();
+    return `Önceki parçaya dönüldü: "${playlistTracks[currentTrackIndex].title}"`;
+  };
+
   window.toggleSpotifyFromTerminal = function() {
-    if (!spotifyCard) return 'Spotify kartı bulunamadı.';
-    toggleSpotifyDrawer();
+    if (!spotifyCard) return 'Spotify penceresi bulunamadı.';
+    toggleDrawer();
     const isOpen = spotifyCard.classList.contains('open');
     return isOpen 
-      ? 'Baran\'ın Spotify listesi açıldı! (Rastgele / Shuffle çalabilirsiniz)' 
-      : 'Spotify listesi kapatıldı.';
+      ? 'Müzik çalar ve Baran\'ın Spotify canlı durumu açıldı!' 
+      : 'Müzik çalar kapatıldı.';
   };
 
-  // Terminalden 'lofi' komutu girildiğinde:
-  window.toggleLofiFromTerminal = function() {
-    if (isAudioPlaying) {
-      stopLofi();
-      return 'Lofi Synthesizer durduruldu.';
-    } else {
-      startLofi();
-      return 'Lofi Synthesizer başlatıldı! (Web Audio API çalışıyor)';
-    }
-  };
-
-  // Terminalden genel 'music' komutu girildiğinde:
-  window.toggleMusicFromTerminal = function() {
-    if (spotifyCard) {
-      return window.toggleSpotifyFromTerminal();
-    } else {
-      return window.toggleLofiFromTerminal();
-    }
-  };
-
-  // Ses düzeyi API'leri (Terminal veya dış fonksiyonlar için)
   window.setPortfolioVolume = function(val) {
     setVolume(val);
-    return `Ses düzeyi %${Math.round(masterVolume * 100)} olarak güncellendi.`;
+    return `Ses düzeyi %${Math.round(masterVolume * 100)} olarak ayarlandı.`;
   };
 
   window.getPortfolioVolume = function() {
@@ -1010,12 +1081,13 @@ Kullanılabilir Komutlar:
   <strong>skills</strong>    - Uzmanlık alanları ve teknolojiler
   <strong>projects</strong>  - Öne çıkan projeler ve bağlantılar
   <strong>contact</strong>   - E-posta ve sosyal profil linkleri
-  <strong>spotify</strong>   - Baran'ın Spotify listesini aç / kapat
-  <strong>music</strong>     - Müzik çalar çekmecesini aç / kapat
-  <strong>lofi</strong>      - Web Audio API Lofi Synthesizer müziği
+  <strong>music</strong>     - Yerel lofi müziği başlat / durdur
+  <strong>next</strong>      - Sıradaki parçaya geç
+  <strong>prev</strong>      - Önceki parçaya dön
   <strong>vol [0-100]</strong> - Ses düzeyini ayarla (örn: vol 50, vol up, vol down)
   <strong>mute</strong>      - Sesi tamamen kapat (0%)
   <strong>unmute</strong>    - Sesi tekrar aç
+  <strong>spotify</strong>   - Baran'ın Spotify canlı durum kartını aç / kapat
   <strong>gravity</strong>   - 2D Fizik simülasyonunu başlat
   <strong>matrix</strong>    - Matrix veri yağmuru efektini çalıştır
   <strong>clear</strong>     - Terminal ekranını temizle
@@ -1068,23 +1140,28 @@ Durum:   Staj ve ortak projelere açık.
         break;
 
       case 'music':
+      case 'play':
+      case 'pause':
+      case 'lofi':
         if (window.toggleMusicFromTerminal) {
           const res = window.toggleMusicFromTerminal();
-          appendLine(res, 'cyan');
-        } else if (window.toggleLofiFromTerminal) {
-          const res = window.toggleLofiFromTerminal();
           appendLine(res, 'cyan');
         } else {
           appendLine('Müzik motoru henüz yüklenmedi.', 'error');
         }
         break;
 
-      case 'lofi':
-        if (window.toggleLofiFromTerminal) {
-          const res = window.toggleLofiFromTerminal();
+      case 'next':
+        if (window.nextTrackFromTerminal) {
+          const res = window.nextTrackFromTerminal();
           appendLine(res, 'cyan');
-        } else {
-          appendLine('Web Audio API sentezleyici henüz yüklenmedi.', 'error');
+        }
+        break;
+
+      case 'prev':
+        if (window.prevTrackFromTerminal) {
+          const res = window.prevTrackFromTerminal();
+          appendLine(res, 'cyan');
         }
         break;
 
