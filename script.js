@@ -1,53 +1,69 @@
 /**
- * Baran Deniz Mutluoğlu — Portfolio Client Script
- * Zero external libraries, pure vanilla modern JavaScript & Web APIs.
- * Includes:
- * 1. Web Audio API Lofi Synthesizer (Feature 1)
- * 2. 2D Canvas Gravity / Physics Engine (Feature 2)
- * 3. Terminal CLI & Konami Code Easter Egg (Feature 4)
- * 4. Real-time Ankara Clock & Activity Simulator (Feature 5)
- * 5. Theme Manager, Copy Micro-interaction, ScrollSpy & Mobile Nav
+ * ============================================================================
+ * Baran Deniz Mutluoğlu — Portfolyo İstemci Taraflı Script Motoru (script.js)
+ * ============================================================================
+ * 
+ * Bu dosya hiçbir harici kütüphane (jQuery, React vb.) kullanılmadan,
+ * doğrudan tarayıcının yerel Web API'leri (Web Audio API, Canvas 2D, 
+ * IntersectionObserver, Clipboard API, localStorage) ile yazılmıştır.
+ * 
+ * İçerdiği Temel Modüller:
+ * 1. Tema Yöneticisi (Koyu / Açık Mod & OS Tercihi Dinleme)
+ * 2. E-posta Kopyalama & Toast Bildirimi Mikro-Etkileşimi
+ * 3. Akıllı Sayfa Kaydırma & Mobil Navigasyon (ScrollSpy & Hamburger)
+ * 4. Canlı Ankara Saati & Dinamik Durum Simülatörü (Europe/Istanbul)
+ * 5. Web Audio API Lofi / Chiptune Synthesizer (0 KB MP3 Müzik Motoru)
+ * 6. 2D Canvas Yerçekimi & Fizik Motoru (Unity Homage)
+ * 7. Retro Terminal CLI & Konami Code Easter Egg
  */
 
+// Sayfa tamamen yüklendiğinde tüm modülleri sırasıyla ayağa kaldır
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  initCopyEmail();
-  initScrollSpy();
-  initMobileNav();
-  initLiveTimeAndStatus();
-  initLofiSynthesizer();
-  initPhysicsPlayground();
-  initTerminalAndKonami();
+  initTheme();              // Koyu / Açık tema sistemini başlat
+  initCopyEmail();          // E-posta kopyalama butonunu bağla
+  initScrollSpy();          // Sayfa içi kaydırma takibini başlat
+  initMobileNav();          // Mobil menü açılır/kapanır mantığını kur
+  initLiveTimeAndStatus();  // Canlı saat ve durum çipini çalıştır
+  initLofiSynthesizer();    // Web Audio API müzik çalarını hazırla
+  initPhysicsPlayground();  // 2D Fizik motoru tuvalini hazırla
+  initTerminalAndKonami();  // Terminal ve Konami Code dinleyicisini kur
 });
 
-/* --------------------------------------------------------------------------
-   1. Theme Management (Light / Dark Mode)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   1. TEMA YÖNETİCİSİ (Açık / Koyu Tema & Hafıza)
+   ========================================================================== */
 function initTheme() {
   const themeToggle = document.getElementById('themeToggle');
   const html = document.documentElement;
 
+  // 1. Kullanıcının daha önce kaydettiği bir tema tercihi var mı kontrol et (localStorage)
   const savedTheme = localStorage.getItem('theme');
+  
+  // 2. Eğer kayıt yoksa, işletim sisteminin karanlık modda olup olmadığına bak
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   
+  // 3. Öncelik: Kayıtlı tema > İşletim sistemi teması > 'light'
   const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
   setTheme(currentTheme);
 
+  // Butona tıklandığında temayı tersine çevir (dark <-> light) ve tarayıcıya kaydet
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
       const active = html.getAttribute('data-theme');
       const next = active === 'dark' ? 'light' : 'dark';
       setTheme(next);
-      localStorage.setItem('theme', next);
+      localStorage.setItem('theme', next); // Seçimi hatırla
     });
   }
 
+  // Kullanıcı sitedeyken işletim sisteminin temasını değiştirirse anında uyarla
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem('theme')) {
       setTheme(e.matches ? 'dark' : 'light');
     }
   });
 
+  // HTML kök etiketine (data-theme="dark|light") özniteliğini basan yardımcı fonksiyon
   function setTheme(theme) {
     html.setAttribute('data-theme', theme);
     if (themeToggle) {
@@ -57,9 +73,9 @@ function initTheme() {
   }
 }
 
-/* --------------------------------------------------------------------------
-   2. Copy Email Micro-interaction
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   2. E-POSTA KOPYALAMA & TOAST BİLDİRİMİ
+   ========================================================================== */
 function initCopyEmail() {
   const copyBtn = document.getElementById('copyEmailBtn');
   const toast = document.getElementById('toast');
@@ -71,9 +87,11 @@ function initCopyEmail() {
 
   copyBtn.addEventListener('click', async () => {
     try {
+      // Modern tarayıcılar için yerel Clipboard API kullanımı
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(emailToCopy);
       } else {
+        // Eski veya güvensiz bağlantılar için gizli textarea fallback yöntemi
         const textarea = document.createElement('textarea');
         textarea.value = emailToCopy;
         textarea.style.position = 'fixed';
@@ -84,22 +102,27 @@ function initCopyEmail() {
         document.body.removeChild(textarea);
       }
 
+      // Buton üzerindeki yazıyı geçici olarak "Kopyalandı!" yap
       const originalText = copyLabel ? copyLabel.textContent : 'E-postayı Kopyala';
       if (copyLabel) copyLabel.textContent = 'Kopyalandı!';
       copyBtn.classList.add('copied');
 
+      // Alttan çıkan zarif Toast bildirimini göster
       showToast('E-posta panoya kopyalandı: ' + emailToCopy);
 
+      // 2.4 saniye sonra butonu eski metnine döndür
       setTimeout(() => {
         if (copyLabel) copyLabel.textContent = originalText;
         copyBtn.classList.remove('copied');
       }, 2400);
 
     } catch (err) {
+      // Pano erişimi engellenmişse doğrudan varsayılan e-posta uygulamasını aç
       window.location.href = `mailto:${emailToCopy}`;
     }
   });
 
+  // Toast bildirimini ekranda gösterip 3 saniye sonra kaldıran fonksiyon
   function showToast(message) {
     if (!toast) return;
     toast.textContent = message;
@@ -111,13 +134,14 @@ function initCopyEmail() {
   }
 }
 
-/* --------------------------------------------------------------------------
-   3. Active Navigation & Mobile Nav
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   3. SAYFA KAYDIRMA & MOBİL MENÜ YÖNETİMİ
+   ========================================================================== */
 function initScrollSpy() {
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('section[id]');
 
+  // Yalnızca sayfa içi çapa (#) linkleri filtrele (çok sayfalı yapıyı bozmamak için)
   const hashNavLinks = Array.from(navLinks).filter((link) => {
     const href = link.getAttribute('href');
     return href && href.startsWith('#');
@@ -125,6 +149,7 @@ function initScrollSpy() {
 
   if (!sections.length || !hashNavLinks.length) return;
 
+  // IntersectionObserver ile ekranın ortasına gelen bölümü tespit et
   const observerOptions = {
     root: null,
     rootMargin: '-20% 0px -70% 0px',
@@ -156,12 +181,14 @@ function initMobileNav() {
 
   if (!menuBtn || !navLinks) return;
 
+  // Hamburger butonuna tıklandığında menüyü aç / kapa
   menuBtn.addEventListener('click', () => {
     const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
     menuBtn.setAttribute('aria-expanded', !isExpanded);
     navLinks.classList.toggle('open');
   });
 
+  // Menüdeki herhangi bir linke tıklandığında menüyü otomatik kapat
   navLinks.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
@@ -169,6 +196,7 @@ function initMobileNav() {
     });
   });
 
+  // Kullanıcı ESC tuşuna basarsa açık olan mobil menüyü kapat
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navLinks.classList.contains('open')) {
       navLinks.classList.remove('open');
@@ -177,9 +205,9 @@ function initMobileNav() {
   });
 }
 
-/* --------------------------------------------------------------------------
-   Feature 5: Real-time Ankara Clock & Activity Simulator
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   4. CANLI ANKARA SAATİ & AKTİVİTE SİMÜLATÖRÜ (Feature 5)
+   ========================================================================== */
 function initLiveTimeAndStatus() {
   const timeEl = document.getElementById('liveTimeText');
   const activityEl = document.getElementById('liveActivityText');
@@ -188,11 +216,11 @@ function initLiveTimeAndStatus() {
 
   function updateClock() {
     const now = new Date();
-    // Use Turkey time (Europe/Istanbul)
+    // Türkiye saat dilimini (UTC+3 Europe/Istanbul) esas alarak saat ve dakikayı al
     const options = { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit', hour12: false };
     const timeStr = new Intl.DateTimeFormat('tr-TR', options).format(now);
     
-    // Get hours in Turkey
+    // Saat değerine göre Baran'ın o anki tipik geliştirici modunu hesapla
     const trHour = parseInt(new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', hour: 'numeric', hour12: false }).format(now), 10);
 
     if (timeEl) {
@@ -217,12 +245,17 @@ function initLiveTimeAndStatus() {
   }
 
   updateClock();
-  setInterval(updateClock, 30000); // Check every 30 seconds
+  setInterval(updateClock, 30000); // Her 30 saniyede bir saati güncelle
 }
 
-/* --------------------------------------------------------------------------
-   Feature 1: Web Audio API Lofi / Chiptune Synthesizer
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   5. WEB AUDIO API LOFI SYNTHESIZER (Feature 1)
+   ==========================================================================
+   Açıklama:
+   Bu müzik motoru 0 byte harici dosya (MP3/WAV) kullanır. Tarayıcının
+   dahili ses sentezleyicisini (AudioContext) kullanarak matematiksel
+   frekanslardan nostaljik, analog bir lofi akor döngüsü üretir.
+   ========================================================================== */
 let audioCtx = null;
 let isAudioPlaying = false;
 let lofiTimer = null;
@@ -234,36 +267,41 @@ function initLofiSynthesizer() {
 
   if (!lofiWidget || !toggleBtn) return;
 
-  // Lofi Warm Chord Progression (Am7 -> Fmaj7 -> Cmaj7 -> G)
+  // Lofi Müzik Akor Dizilimi (Frekanslar Hz cinsindendir):
+  // Sırasıyla: Am7 -> Fmaj7 -> Cmaj7 -> G
   const chordProgression = [
-    [220.00, 261.63, 329.63, 392.00], // Am7 (A3, C4, E4, G4)
-    [174.61, 220.00, 261.63, 329.63], // Fmaj7 (F3, A3, C4, E4)
-    [130.81, 164.81, 196.00, 246.94], // Cmaj7 (C3, E3, G3, B3)
-    [196.00, 246.94, 293.66, 392.00]  // G (G3, B3, D4, G4)
+    [220.00, 261.63, 329.63, 392.00], // Am7  (La3, Do4, Mi4, Sol4)
+    [174.61, 220.00, 261.63, 329.63], // Fmaj7 (Fa3, La3, Do4, Mi4)
+    [130.81, 164.81, 196.00, 246.94], // Cmaj7 (Do3, Mi3, Sol3, Si3)
+    [196.00, 246.94, 293.66, 392.00]  // G     (Sol3, Si3, Re4, Sol4)
   ];
 
+  // Pentatonik ölçekteki hafif melodi çan frekansları
   const pentatonicMelody = [440.00, 493.88, 523.25, 659.25, 783.99, 880.00];
 
+  // Bir akor kümesini ve rastgele melodi notasını ses dalgasına dönüştüren çekirdek fonksiyon
   function playChord(chord, duration = 1.9) {
     if (!audioCtx) return;
     const now = audioCtx.currentTime;
 
-    // Warm Lowpass Filter (Vintage tape simulator)
+    // 1. Sıcaklık Filtresi (Biquad Lowpass Filter):
+    // Dijital sertliği kırıp kaset/plak (vinyl) sıcaklığı vermek için 680 Hz üstünü yumuşatır
     const filter = audioCtx.createBiquadFilter();
     filter.type = 'lowpass';
     filter.frequency.setValueAtTime(680, now);
     filter.Q.setValueAtTime(1.8, now);
     filter.connect(audioCtx.destination);
 
-    // Chord voices
+    // 2. Akorun her bir sesini osilatörlerle üret
     chord.forEach((freq, idx) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
+      // Sıcak elektro-piyano tınısı için üçgen (triangle) ve sinüs (sine) dalga karışımı
       osc.type = idx % 2 === 0 ? 'triangle' : 'sine';
       osc.frequency.setValueAtTime(freq, now);
 
-      // Smooth attack & gentle tape decay
+      // ADSR Ses Zarfı (Yavaş yükselme - Linear Attack, yumuşak sönümlenme - Exponential Decay)
       gain.gain.setValueAtTime(0.001, now);
       gain.gain.linearRampToValueAtTime(0.055, now + 0.12);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -275,7 +313,7 @@ function initLofiSynthesizer() {
       osc.stop(now + duration);
     });
 
-    // Gentle random melody bell
+    // 3. Olasılıksal hafif melodi çanı (%65 ihtimalle arkada çalar)
     if (Math.random() > 0.35) {
       const bellOsc = audioCtx.createOscillator();
       const bellGain = audioCtx.createGain();
@@ -296,6 +334,7 @@ function initLofiSynthesizer() {
     }
   }
 
+  // Müziği başlatan fonksiyon (Tarayıcı güvenlik politikası gereği kullanıcı tıklamasıyla başlar)
   function startLofi() {
     if (!audioCtx) {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -306,25 +345,27 @@ function initLofiSynthesizer() {
     }
 
     isAudioPlaying = true;
-    lofiWidget.classList.add('playing');
+    lofiWidget.classList.add('playing'); // Ekolayzır animasyonunu çalıştır
 
-    // Immediate first chord
+    // İlk akoru hemen çal
     playChord(chordProgression[chordIndex]);
     chordIndex = (chordIndex + 1) % chordProgression.length;
 
-    // Loop every 2 seconds
+    // Her 2 saniyede bir sonraki akora geç ve sonsuz loop yap
     lofiTimer = setInterval(() => {
       playChord(chordProgression[chordIndex]);
       chordIndex = (chordIndex + 1) % chordProgression.length;
     }, 2000);
   }
 
+  // Müziği durduran fonksiyon
   function stopLofi() {
     isAudioPlaying = false;
     lofiWidget.classList.remove('playing');
     if (lofiTimer) clearInterval(lofiTimer);
   }
 
+  // Buton tıklamasıyla çal / durdur kontrolü
   toggleBtn.addEventListener('click', () => {
     if (isAudioPlaying) {
       stopLofi();
@@ -333,21 +374,26 @@ function initLofiSynthesizer() {
     }
   });
 
-  // Export control for terminal command
+  // Terminalden 'music' komutu girildiğinde çağrılabilmesi için global erişime aç
   window.toggleLofiFromTerminal = function() {
     if (isAudioPlaying) {
       stopLofi();
       return 'Lofi Synthesizer durduruldu.';
     } else {
       startLofi();
-      return 'Lofi Synthesizer başlatıldı! (Web Audio API calisiyor)';
+      return 'Lofi Synthesizer başlatıldı! (Web Audio API çalışıyor)';
     }
   };
 }
 
-/* --------------------------------------------------------------------------
-   Feature 2: 2D Physics Gravity Playground (Unity Homage)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   6. 2D CANVAS YERÇEKİMİ & FİZİK MOTORU (Feature 2 - Unity Homage)
+   ==========================================================================
+   Açıklama:
+   Unity ve oyun geliştirme prensiplerine (RigidBody2D, Yerçekimi, Esneklik,
+   Sürtünme ve Çarpışma) saygı duruşu niteliğinde; saf HTML5 Canvas ve
+   Euler fizik integrasyonu ile yazılmış interaktif oyun alanı.
+   ========================================================================== */
 function initPhysicsPlayground() {
   const overlay = document.getElementById('physicsOverlay');
   const closeBtn = document.getElementById('physicsCloseBtn');
@@ -356,6 +402,7 @@ function initPhysicsPlayground() {
 
   if (!overlay || !canvas) return;
 
+  // Ana sayfadaki veya Yetkinlikler sayfasındaki fizik başlatma butonlarını seç
   const triggerBtns = document.querySelectorAll('#gravityToggleBtn, .gravity-trigger, #skillsGravityBtn');
 
   const ctx = canvas.getContext('2d');
@@ -367,6 +414,7 @@ function initPhysicsPlayground() {
   let lastMouse = { x: 0, y: 0, time: 0 };
   let mouseVel = { x: 0, y: 0 };
 
+  // Havadan düşecek olan teknoloji ve mühendislik kutuları
   const tagsList = [
     { text: 'C#', color: '#9b59b6' },
     { text: 'Unity', color: '#34d399' },
@@ -380,72 +428,75 @@ function initPhysicsPlayground() {
     { text: 'OSTIM Tech', color: '#f43f5e' }
   ];
 
+  // Tuval boyutunu pencereye göre tam ekran ayarla
   function resizeCanvas() {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 60; // subtract hud
+    canvas.height = window.innerHeight - 60; // Üstteki bilgi çubuğu hariç
   }
 
+  // 2D Fizik Kutusu Sınıfı (RigidBody Simülasyonu)
   class PhysicsBox {
     constructor(x, y, text, color) {
-      this.x = x;
-      this.y = y;
-      this.vx = (Math.random() - 0.5) * 8;
-      this.vy = Math.random() * -4;
-      this.text = text;
-      this.color = color;
+      this.x = x;                             // X pozisyonu
+      this.y = y;                             // Y pozisyonu
+      this.vx = (Math.random() - 0.5) * 8;    // Başlangıç yatay hızı
+      this.vy = Math.random() * -4;           // Başlangıç dikey zıplama hızı
+      this.text = text;                       // Kutu üzerindeki etiket
+      this.color = color;                     // Kenar çerçeve rengi
       
-      // Calculate dimensions based on text length
       this.width = Math.max(80, text.length * 14 + 28);
       this.height = 42;
-      this.radius = 8;
-      this.restitution = 0.65; // bounciness
-      this.friction = 0.985;
-      this.gravity = 0.48;
+      this.radius = 8;                        // Yuvarlatılmış köşe yarıçapı
+      this.restitution = 0.65;                // Zıplama / Esneklik katsayısı (Bounce)
+      this.friction = 0.985;                  // Hava sürtünmesi
+      this.gravity = 0.48;                    // Yerçekimi ivmesi (g)
     }
 
+    // Her karede (frame) konum ve hızları güncelle
     update(width, height) {
-      if (draggedBody === this) return;
+      if (draggedBody === this) return; // Fareyle tutuluyorsa fizik motorunu geçici askıya al
 
-      this.vy += this.gravity;
-      this.vx *= this.friction;
+      this.vy += this.gravity;                // Yerçekimini hıza ekle
+      this.vx *= this.friction;               // Hava direncini uygula
       this.vy *= this.friction;
 
-      this.x += this.vx;
+      this.x += this.vx;                      // Pozisyonu güncelle
       this.y += this.vy;
 
-      // Floor bounce
+      // Zemin Çarpışması & Geri Zıplama
       if (this.y + this.height > height) {
         this.y = height - this.height;
-        this.vy = -this.vy * this.restitution;
-        this.vx *= 0.95; // ground friction
+        this.vy = -this.vy * this.restitution; // Ters yönde sekme
+        this.vx *= 0.95;                       // Zemin sürtünmesi
       }
 
-      // Left wall
+      // Sol Duvar Çarpışması
       if (this.x < 0) {
         this.x = 0;
         this.vx = -this.vx * this.restitution;
       }
 
-      // Right wall
+      // Sağ Duvar Çarpışması
       if (this.x + this.width > width) {
         this.x = width - this.width;
         this.vx = -this.vx * this.restitution;
       }
     }
 
+    // Kutuyu tuvale çizen fonksiyon
     draw(ctx) {
       ctx.save();
       ctx.fillStyle = '#161b22';
       ctx.strokeStyle = this.color;
       ctx.lineWidth = 2;
 
-      // Draw rounded rectangle
+      // Yuvarlatılmış dikdörtgen çiz
       ctx.beginPath();
       ctx.roundRect(this.x, this.y, this.width, this.height, this.radius);
       ctx.fill();
       ctx.stroke();
 
-      // Draw text
+      // Etiket metnini ortala ve yaz
       ctx.fillStyle = '#f0f6fc';
       ctx.font = '600 14px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
@@ -455,11 +506,13 @@ function initPhysicsPlayground() {
       ctx.restore();
     }
 
+    // Farenin kutunun sınırları içinde olup olmadığını test eden fonksiyon
     contains(px, py) {
       return px >= this.x && px <= this.x + this.width && py >= this.y && py <= this.y + this.height;
     }
   }
 
+  // İlk açılışta kutuları sahnede oluştur
   function spawnInitialBodies() {
     bodies = [];
     const count = tagsList.length;
@@ -471,12 +524,14 @@ function initPhysicsPlayground() {
     }
   }
 
+  // Kullanıcı butona bastığında havadan rastgele yeni bir kutu yağdır
   function spawnSingleBody() {
     const randomItem = tagsList[Math.floor(Math.random() * tagsList.length)];
     const x = Math.random() * (canvas.width - 120) + 40;
     bodies.push(new PhysicsBox(x, 20, randomItem.text, randomItem.color));
   }
 
+  // Ana Animasyon Döngüsü (60 FPS Game Loop)
   function loop() {
     if (!isRunning) return;
 
@@ -490,6 +545,7 @@ function initPhysicsPlayground() {
     animationId = requestAnimationFrame(loop);
   }
 
+  // Fizik motorunu açan fonksiyon
   function openPhysics() {
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
@@ -499,6 +555,7 @@ function initPhysicsPlayground() {
     loop();
   }
 
+  // Fizik motorunu kapatan fonksiyon
   function closePhysics() {
     isRunning = false;
     if (animationId) cancelAnimationFrame(animationId);
@@ -506,7 +563,7 @@ function initPhysicsPlayground() {
     overlay.setAttribute('aria-hidden', 'true');
   }
 
-  // Mouse / Touch Interactions
+  // Fare veya Dokunmatik Ekran Koordinatlarını Hesaplama
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -517,15 +574,7 @@ function initPhysicsPlayground() {
     };
   }
 
-  canvas.addEventListener('mousedown', onPointerDown);
-  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
-
-  window.addEventListener('mousemove', onPointerMove);
-  window.addEventListener('touchmove', onPointerMove, { passive: false });
-
-  window.addEventListener('mouseup', onPointerUp);
-  window.addEventListener('touchend', onPointerUp);
-
+  // Kutuyu Tutma (Tıklama / Dokunma)
   function onPointerDown(e) {
     if (e.touches) e.preventDefault();
     const pos = getPos(e);
@@ -541,6 +590,7 @@ function initPhysicsPlayground() {
     }
   }
 
+  // Kutuyu Sürükleme ve Hız Hesaplama (Fırlatma mekaniği)
   function onPointerMove(e) {
     if (!draggedBody || !isRunning) return;
     if (e.touches) e.preventDefault();
@@ -548,6 +598,7 @@ function initPhysicsPlayground() {
     const now = performance.now();
     const dt = (now - lastMouse.time) || 16;
 
+    // Farenin hareket hızına göre cisme momentum kazandır
     mouseVel.x = ((pos.x - lastMouse.x) / dt) * 16;
     mouseVel.y = ((pos.y - lastMouse.y) / dt) * 16;
 
@@ -557,6 +608,7 @@ function initPhysicsPlayground() {
     draggedBody.y = pos.y - dragOffset.y;
   }
 
+  // Kutuyu Bırakma (Momentum ile fırlatma)
   function onPointerUp() {
     if (draggedBody) {
       draggedBody.vx = Math.max(-25, Math.min(25, mouseVel.x));
@@ -565,6 +617,17 @@ function initPhysicsPlayground() {
     }
   }
 
+  // Dinleyicileri hem fareye hem dokunmatik ekranlara bağla
+  canvas.addEventListener('mousedown', onPointerDown);
+  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('touchmove', onPointerMove, { passive: false });
+
+  window.addEventListener('mouseup', onPointerUp);
+  window.addEventListener('touchend', onPointerUp);
+
+  // Buton dinleyicileri
   triggerBtns.forEach((btn) => {
     btn.addEventListener('click', openPhysics);
   });
@@ -575,22 +638,28 @@ function initPhysicsPlayground() {
     if (isRunning) resizeCanvas();
   });
 
+  // ESC tuşu ile kapatma
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isRunning) {
       closePhysics();
     }
   });
 
-  // Export for terminal command
+  // Terminalden 'gravity' yazıldığında çağrılması için dışa aktar
   window.launchPhysicsFromTerminal = function() {
     openPhysics();
     return '2D Gravity Fizik Motoru başlatıldı!';
   };
 }
 
-/* --------------------------------------------------------------------------
-   Feature 4: Terminal CLI & Konami Code Easter Egg
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   7. RETRO TERMİNAL CLI & KONAMI CODE EASTER EGG (Feature 4)
+   ==========================================================================
+   Açıklama:
+   Kült yazılımcı ve oyun şakası olan Konami Code (↑ ↑ ↓ ↓ ← → ← → B A)
+   veya '~' tuşu ile tetiklenen interaktif terminal ortamı.
+   Komut geçmişi (Yukarı/Aşağı ok tuşları) ve terminal içi komut çalıştırıcı.
+   ========================================================================== */
 function initTerminalAndKonami() {
   const terminalModal = document.getElementById('terminalModal');
   const terminalInput = document.getElementById('terminalInput');
@@ -601,26 +670,26 @@ function initTerminalAndKonami() {
 
   if (!terminalModal || !terminalInput || !terminalOutput) return;
 
-  const commandHistory = [];
+  const commandHistory = []; // Daha önce yazılan komutların hafızası
   let historyIndex = -1;
 
-  // Konami Code sequence
+  // Klasik Konami Code dizilimi
   const konamiPattern = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   let konamiProgress = 0;
 
   document.addEventListener('keydown', (e) => {
-    // Check Konami Code
+    // 1. Konami Code Kontrolü
     if (e.key === konamiPattern[konamiProgress]) {
       konamiProgress++;
       if (konamiProgress === konamiPattern.length) {
         konamiProgress = 0;
-        openTerminal('🎉 KONAMI CODE KEŞFEDİLDİ! Gizli Terminal Arayüzü Aktif Edildi.\n');
+        openTerminal('🎉 TEBRİKLER! Konami Code Keşfedildi. Gizli Terminal Yetkisi Verildi.\n');
       }
     } else {
       konamiProgress = (e.key === konamiPattern[0]) ? 1 : 0;
     }
 
-    // Toggle with backtick (`) or tilde (~)
+    // 2. Tırnak / Backtick (`) veya Tilde (~) ile açma
     if (e.key === '`' || e.key === '~') {
       e.preventDefault();
       if (terminalModal.classList.contains('open')) {
@@ -630,12 +699,13 @@ function initTerminalAndKonami() {
       }
     }
 
-    // Close on Escape if terminal open
+    // 3. ESC tuşu ile kapatma
     if (e.key === 'Escape' && terminalModal.classList.contains('open')) {
       closeTerminal();
     }
   });
 
+  // Terminali açan fonksiyon
   function openTerminal(extraMessage = '') {
     terminalModal.classList.add('open');
     if (extraMessage) {
@@ -644,6 +714,7 @@ function initTerminalAndKonami() {
     setTimeout(() => terminalInput.focus(), 80);
   }
 
+  // Terminali kapatan fonksiyon
   function closeTerminal() {
     terminalModal.classList.remove('open');
   }
@@ -660,15 +731,16 @@ function initTerminalAndKonami() {
     terminalBackdrop.addEventListener('click', closeTerminal);
   }
 
+  // Terminal ekranına satır ekleyen yardımcı fonksiyon
   function appendLine(text, className = '') {
     const div = document.createElement('div');
     div.className = `terminal-output-line ${className}`;
     div.innerHTML = text;
     terminalOutput.appendChild(div);
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    terminalOutput.scrollTop = terminalOutput.scrollHeight; // Otomatik aşağı kaydır
   }
 
-  // Command Dispatcher
+  // Komut Girişi ve Tuş Dinleyicisi
   terminalInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const rawCmd = terminalInput.value.trim();
@@ -682,11 +754,13 @@ function initTerminalAndKonami() {
       appendLine(`baran@terminal:~$ ${escapeHtml(rawCmd)}`, 'cmd-echo');
       executeCommand(rawCmd.toLowerCase());
     } else if (e.key === 'ArrowUp') {
+      // Önceki yazılan komutu geri getir
       if (historyIndex > 0) {
         historyIndex--;
         terminalInput.value = commandHistory[historyIndex] || '';
       }
     } else if (e.key === 'ArrowDown') {
+      // Sonraki komuta git
       if (historyIndex < commandHistory.length - 1) {
         historyIndex++;
         terminalInput.value = commandHistory[historyIndex] || '';
@@ -697,6 +771,7 @@ function initTerminalAndKonami() {
     }
   });
 
+  // Komut Ayrıştırıcı (Command Dispatcher)
   function executeCommand(cmd) {
     switch (cmd) {
       case 'help':
@@ -786,6 +861,7 @@ Durum:   Staj ve ortak projelere açık.
     }
   }
 
+  // Matrix Yeşil Karakter Yağmuru Efekti
   function runMatrixRain() {
     appendLine('Matrix moduna giriliyor...', 'cyan');
     let count = 0;
@@ -804,6 +880,7 @@ Durum:   Staj ve ortak projelere açık.
     }, 60);
   }
 
+  // XSS koruması için HTML karakter kaçış fonksiyonu
   function escapeHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
