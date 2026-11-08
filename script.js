@@ -1534,7 +1534,16 @@ OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sını
   İngilizce Hazırlık Programı | Ankara
 
 ==================================================
-03. ÖNE ÇIKAN PROJELER & UYGULAMALAR
+03. İŞ & STAJ DENEYİMİ
+==================================================
+• Botart Yazılım ve Bilgi Teknolojileri AR-GE A.Ş. (2025 – 2026)
+  Stajyer Yazılım Geliştirici (Oyun Geliştirme / Game Dev Intern) | İzmir (Ege Üniv. Teknopark)
+  - Unity oyun motoru ve C# ile şirket bünyesindeki oyun projelerinde mekanik ve prototipleme geliştirme.
+  - Dinamik veri yapıları (Listeler, nesne durumları) ve oyun mimarisi optimizasyonları.
+  - Oyun tasarımı ve mekanik entegrasyonu aşamalarında teknik ve algoritmik problem çözme.
+
+==================================================
+04. ÖNE ÇIKAN PROJELER & UYGULAMALAR
 ==================================================
 • Prosedürel Web Audio Müzik & Ritim Motoru (2026)
   Teknolojiler: Web Audio API, Vanilla JavaScript, HTML5/CSS3
@@ -1559,7 +1568,7 @@ OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sını
   - Teknoloji odaklı proje için etimolojik ve kavramsal araştırmalarla marka mimarisi.
 
 ==================================================
-04. TEKNİK YETKİNLİKLER
+05. TEKNİK YETKİNLİKLER
 ==================================================
 • Programlama Dilleri: C# (.NET), C, JavaScript (ES6+), HTML5, CSS3, SQL
 • Oyun Geliştirme: Unity Engine, 2D Oyun Fiziği, Rigidbody2D, C# Scripting, Tilemap
@@ -1567,7 +1576,7 @@ OSTİM Teknik Üniversitesi Yazılım Mühendisliği (%100 İngilizce) 2. sını
 • İlgi & Araştırma: Oyun Fiziği, Algoritmik Mantık, Matematiksel Analiz, Savunma Sanayii
 
 ==================================================
-05. DİLLER
+06. DİLLER
 ==================================================
 • Türkçe: Anadil
 • İngilizce: B2 / Profesyonel Teknik Düzey (%100 İngilizce Lisans Eğitimi)
