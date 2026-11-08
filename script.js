@@ -275,15 +275,19 @@ function initLiveTimeAndStatus() {
    ========================================================================== */
 let audioCtx = null;
 let isAudioPlaying = false;
-let sequencerTimer = null;
-let currentStep = 0;
+let playInterval = null;
+let secondaryInterval = null;
+let currentChordIndex = 0;
+let chiptuneStep = 0;
+let rainSourceNode = null;
+let rainGainNode = null;
 
 // Master Ses Düzeyi Değişkenleri
 let masterGainNode = null;
 let masterVolume = 0.7;    // Varsayılan ses seviyesi: %70
 let previousVolume = 0.7;  // Mute (sessize alma) öncesi hatırlanan ses seviyesi
 
-// Paylaşımlı Beyaz Gürültü Tamponu (Davullar ve Yağmur Sesi İçin)
+// Paylaşımlı Gürültü Tamponu (Yağmur Ambiyansı ve Yumuşak Doku İçin)
 let sharedNoiseBuffer = null;
 function getNoiseBuffer(ctx) {
   if (sharedNoiseBuffer) return sharedNoiseBuffer;
@@ -291,23 +295,24 @@ function getNoiseBuffer(ctx) {
   sharedNoiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = sharedNoiseBuffer.getChannelData(0);
   for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1;
+    data[i] = (Math.random() * 2 - 1) * 0.4;
   }
   return sharedNoiseBuffer;
 }
 
-// 4 Tamamen Farklı Müzik Türü ve Ritim Konfigürasyonu
+// 4 Tamamen Farklı Müzik Türü ve Tını Konfigürasyonu
 const playlistTracks = [
   {
     id: "lofi",
-    title: "1. Chillhop Beat (Lofi Boom-Bap & Vinyl)",
+    title: "1. Gece Kodlaması (Chillhop & Rhodes)",
     shortTitle: "Lofi Chillhop",
-    bpm: 78,
+    interval: 2200,
+    filterFreq: 620,
     chords: [
-      [220.00, 261.63, 329.63, 392.00], // Am7
-      [174.61, 220.00, 261.63, 329.63], // Fmaj7
-      [130.81, 164.81, 196.00, 246.94], // Cmaj7
-      [196.00, 246.94, 293.66, 392.00]  // G
+      [110.00, 220.00, 261.63, 329.63, 392.00, 493.88], // Am9
+      [87.31, 174.61, 220.00, 261.63, 329.63],          // Fmaj7
+      [130.81, 196.00, 246.94, 261.63, 329.63],         // Cmaj7
+      [98.00, 164.81, 196.00, 246.94, 293.66]          // Em7/G
     ],
     melody: [440.00, 493.88, 523.25, 659.25, 783.99, 880.00]
   },
@@ -315,44 +320,45 @@ const playlistTracks = [
     id: "chiptune",
     title: "2. 8-Bit Arcade (Retro Chiptune & Game)",
     shortTitle: "8-Bit Arcade",
-    bpm: 128,
-    arpChords: [
-      [261.63, 329.63, 392.00, 523.25], // C
-      [220.00, 261.63, 329.63, 440.00], // Am
-      [174.61, 220.00, 261.63, 349.23], // F
-      [196.00, 246.94, 293.66, 392.00]  // G
-    ],
-    bassRoots: [130.81, 110.00, 87.31, 98.00]
+    stepInterval: 140,
+    arps: [
+      { notes: [261.63, 329.63, 392.00, 523.25], bass: 130.81 }, // C Maj
+      { notes: [220.00, 261.63, 329.63, 440.00], bass: 110.00 }, // A Min
+      { notes: [174.61, 220.00, 261.63, 349.23], bass: 87.31 },  // F Maj
+      { notes: [196.00, 246.94, 293.66, 392.00], bass: 98.00 }   // G Maj
+    ]
   },
   {
     id: "synthwave",
     title: "3. Cyberpunk 2088 (Dark Synthwave & Drive)",
     shortTitle: "Cyberpunk 2088",
-    bpm: 106,
-    sawChords: [
-      [164.81, 196.00, 246.94, 329.63], // Em
-      [130.81, 164.81, 196.00, 261.63], // C
-      [146.83, 174.61, 220.00, 293.66], // Dm
-      [123.47, 155.56, 185.00, 246.94]  // Bm
-    ],
-    bassRoots: [82.41, 65.41, 73.42, 61.74]
+    padInterval: 1800,
+    bassInterval: 225,
+    filterFreq: 880,
+    chords: [
+      { pad: [164.81, 196.00, 246.94, 329.63], bass: 82.41 }, // Em
+      { pad: [130.81, 164.81, 196.00, 261.63], bass: 65.41 }, // C
+      { pad: [146.83, 174.61, 220.00, 293.66], bass: 73.42 }, // D
+      { pad: [123.47, 155.56, 185.00, 246.94], bass: 61.74 }  // Bm
+    ]
   },
   {
     id: "rainy",
     title: "4. Yağmurlu Ankara (Rain & Felt Piano)",
     shortTitle: "Yağmur & Piyano",
-    bpm: 64,
-    pianoChords: [
-      [130.81, 164.81, 196.00, 246.94, 329.63], // Cmaj9
-      [146.83, 174.61, 220.00, 261.63, 329.63], // Dm9
-      [174.61, 220.00, 261.63, 329.63, 392.00], // Fmaj7#11
+    interval: 2800,
+    filterFreq: 520,
+    chords: [
+      [130.81, 196.00, 246.94, 293.66, 329.63], // Cmaj9
+      [146.83, 220.00, 261.63, 329.63, 349.23], // Dm9
+      [174.61, 220.00, 261.63, 329.63, 392.00], // Fmaj7
       [130.81, 164.81, 196.00, 246.94, 293.66]  // Cadd9
     ],
     dropletNotes: [523.25, 659.25, 783.99, 987.77, 1046.50]
   }
 ];
 
-let currentTrackIndex = 0; // Başlangıç parçası (Lofi Boom-Bap)
+let currentTrackIndex = 0; // Başlangıç parçası (Lofi Chillhop)
 
 function initLofiSynthesizer() {
   const musicWidget = document.getElementById('musicWidget') || document.getElementById('lofiWidget');
@@ -514,7 +520,7 @@ function initLofiSynthesizer() {
   }
 
   // --------------------------------------------------------------------------
-  // C) WEB AUDIO API ÇOK TÜRLÜ SES SENTEZLEYİCİSİ (MULTİ-GENRE SYNTH & DRUMS)
+  // C) WEB AUDIO API ÇOK TÜRLÜ SES SENTEZLEYİCİSİ (4 TAMAMEN FARKLI TÜR)
   // --------------------------------------------------------------------------
   function ensureAudioContext() {
     if (!audioCtx) {
@@ -532,261 +538,6 @@ function initLofiSynthesizer() {
     return audioCtx;
   }
 
-  // 1. Kick Davulu (Türlere göre tonu değişir)
-  function playKick(time, style = 'lofi') {
-    if (!audioCtx || !masterGainNode) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    if (style === 'synthwave') {
-      // Sert, dört vuruşlu synthwave kick'i
-      osc.frequency.setValueAtTime(160, time);
-      osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
-      gain.gain.setValueAtTime(0.65, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
-    } else if (style === 'chiptune') {
-      // 8-bit retro arcade bas vuruşu
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(220, time);
-      osc.frequency.exponentialRampToValueAtTime(45, time + 0.08);
-      gain.gain.setValueAtTime(0.45, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-    } else {
-      // Sıcak, vinil Lofi boom-bap kick'i
-      osc.frequency.setValueAtTime(130, time);
-      osc.frequency.exponentialRampToValueAtTime(32, time + 0.14);
-      gain.gain.setValueAtTime(0.5, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
-    }
-
-    osc.connect(gain);
-    gain.connect(masterGainNode);
-    osc.start(time);
-    osc.stop(time + 0.22);
-  }
-
-  // 2. Snare / Trampet (Gürültü ve Gövde Karışımı)
-  function playSnare(time, style = 'lofi') {
-    if (!audioCtx || !masterGainNode) return;
-    const buf = getNoiseBuffer(audioCtx);
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buf;
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = style === 'synthwave' ? 'bandpass' : 'highpass';
-    filter.frequency.setValueAtTime(style === 'synthwave' ? 1200 : 900, time);
-
-    const gain = audioCtx.createGain();
-    const dur = style === 'synthwave' ? 0.2 : (style === 'chiptune' ? 0.09 : 0.14);
-    gain.gain.setValueAtTime(style === 'chiptune' ? 0.35 : 0.25, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGainNode);
-    noise.start(time);
-    noise.stop(time + dur);
-
-    // Gövde tonu (Snare Body)
-    if (style !== 'chiptune') {
-      const osc = audioCtx.createOscillator();
-      const oscGain = audioCtx.createGain();
-      osc.frequency.setValueAtTime(style === 'synthwave' ? 220 : 175, time);
-      oscGain.gain.setValueAtTime(0.2, time);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, time + 0.09);
-      osc.connect(oscGain);
-      oscGain.connect(masterGainNode);
-      osc.start(time);
-      osc.stop(time + 0.09);
-    }
-  }
-
-  // 3. Hi-Hat (Zil)
-  function playHiHat(time, open = false) {
-    if (!audioCtx || !masterGainNode) return;
-    const buf = getNoiseBuffer(audioCtx);
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buf;
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'highpass';
-    filter.frequency.setValueAtTime(7500, time);
-
-    const gain = audioCtx.createGain();
-    const dur = open ? 0.14 : 0.035;
-    gain.gain.setValueAtTime(open ? 0.14 : 0.09, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGainNode);
-    noise.start(time);
-    noise.stop(time + dur);
-  }
-
-  // 4. Lofi Sıcak Elektro-Piyano Akoru (Rhodes Stili)
-  function playLofiChord(chord, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(650, time);
-    filter.connect(masterGainNode);
-
-    chord.forEach((freq, idx) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = idx % 2 === 0 ? 'triangle' : 'sine';
-      osc.frequency.setValueAtTime(freq, time);
-
-      gain.gain.setValueAtTime(0.001, time);
-      gain.gain.linearRampToValueAtTime(0.05, time + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 1.6);
-
-      osc.connect(gain);
-      gain.connect(filter);
-      osc.start(time);
-      osc.stop(time + 1.6);
-    });
-  }
-
-  // 5. 8-Bit Kare Dalga Arpej Notası (Chiptune)
-  function playChiptuneArp(freq, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(freq, time);
-
-    gain.gain.setValueAtTime(0.065, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.09);
-
-    osc.connect(gain);
-    gain.connect(masterGainNode);
-    osc.start(time);
-    osc.stop(time + 0.09);
-  }
-
-  // 6. 8-Bit Retro Bas Yürüyüşü
-  function playChiptuneBass(freq, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(freq, time);
-
-    gain.gain.setValueAtTime(0.12, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.16);
-
-    osc.connect(gain);
-    gain.connect(masterGainNode);
-    osc.start(time);
-    osc.stop(time + 0.16);
-  }
-
-  // 7. Synthwave Pumping Saw Bası
-  function playSynthwaveBass(freq, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const osc = audioCtx.createOscillator();
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(280, time);
-    filter.Q.setValueAtTime(2.5, time);
-
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(freq, time);
-
-    gain.gain.setValueAtTime(0.18, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(masterGainNode);
-    osc.start(time);
-    osc.stop(time + 0.18);
-  }
-
-  // 8. Synthwave Sinematik Pad Akoru
-  function playSynthwavePad(chord, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(850, time);
-    filter.connect(masterGainNode);
-
-    chord.forEach((freq) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(freq, time);
-
-      gain.gain.setValueAtTime(0.001, time);
-      gain.gain.linearRampToValueAtTime(0.035, time + 0.25);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 1.8);
-
-      osc.connect(gain);
-      gain.connect(filter);
-      osc.start(time);
-      osc.stop(time + 1.8);
-    });
-  }
-
-  // 9. Yağmur ve Keçe Piyano Akoru
-  function playRainyPiano(chord, time) {
-    if (!audioCtx || !masterGainNode) return;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(500, time);
-    filter.connect(masterGainNode);
-
-    chord.forEach((freq) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, time);
-
-      gain.gain.setValueAtTime(0.001, time);
-      gain.gain.linearRampToValueAtTime(0.06, time + 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.0001, time + 2.8);
-
-      osc.connect(gain);
-      gain.connect(filter);
-      osc.start(time);
-      osc.stop(time + 2.8);
-    });
-  }
-
-  // 10. Prosedürel Yağmur Sesi Motoru (Arka Plan Ambiyansı)
-  let rainSource = null;
-  let rainGain = null;
-  function startRainSound() {
-    if (!audioCtx || !masterGainNode || rainSource) return;
-    const buf = getNoiseBuffer(audioCtx);
-    rainSource = audioCtx.createBufferSource();
-    rainSource.buffer = buf;
-    rainSource.loop = true;
-
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(700, audioCtx.currentTime);
-
-    rainGain = audioCtx.createGain();
-    rainGain.gain.setValueAtTime(0.09, audioCtx.currentTime);
-
-    rainSource.connect(filter);
-    filter.connect(rainGain);
-    rainGain.connect(masterGainNode);
-    rainSource.start();
-  }
-
-  function stopRainSound() {
-    if (rainSource) {
-      try { rainSource.stop(); } catch (e) {}
-      rainSource = null;
-      rainGain = null;
-    }
-  }
-
   // Parça etiketlerini arayüzde güncelle
   function updateTrackDisplay() {
     const track = playlistTracks[currentTrackIndex];
@@ -794,135 +545,245 @@ function initLofiSynthesizer() {
     if (pillTrackTitle) pillTrackTitle.textContent = track.shortTitle;
   }
 
-  // --------------------------------------------------------------------------
-  // D) 16 ADIMLI ADIM SEKANSÖRÜ (16-STEP MASTER SEQUENCER)
-  // --------------------------------------------------------------------------
-  function sequencerStep() {
-    if (!isAudioPlaying || !audioCtx) return;
+  // 1. TÜR: ☕ LOFI CHILLHOP RHODES & ÇANLAR
+  function playLofiChord() {
+    if (!audioCtx || !masterGainNode) return;
+    const track = playlistTracks[0];
+    const chord = track.chords[currentChordIndex % track.chords.length];
     const now = audioCtx.currentTime;
-    const track = playlistTracks[currentTrackIndex];
-    const stepInBar = currentStep % 16;
-    const barIndex = Math.floor(currentStep / 16);
 
-    if (track.id === 'lofi') {
-      // LOFI BOOM-BAP RİTMİ & AKORLARI
-      const chordIdx = barIndex % track.chords.length;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(track.filterFreq, now);
+    filter.Q.setValueAtTime(1.4, now);
+    filter.connect(masterGainNode);
 
-      // Davul vuruşları
-      if (stepInBar === 0 || stepInBar === 8 || stepInBar === 10) {
-        playKick(now, 'lofi');
-      }
-      if (stepInBar === 4 || stepInBar === 12) {
-        playSnare(now, 'lofi');
-      }
-      if (stepInBar % 2 === 0) {
-        playHiHat(now, stepInBar === 14);
-      }
+    chord.forEach((freq, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = idx % 2 === 0 ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, now);
 
-      // Akorlar (Barın başında ve ortasında)
-      if (stepInBar === 0) {
-        playLofiChord(track.chords[chordIdx], now);
-      }
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.07, now + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.1);
 
-      // Melodi çanları
-      if (stepInBar === 14 && Math.random() > 0.4) {
-        const bell = audioCtx.createOscillator();
-        const bGain = audioCtx.createGain();
-        const note = track.melody[Math.floor(Math.random() * track.melody.length)];
-        bell.type = 'sine';
-        bell.frequency.setValueAtTime(note, now);
-        bGain.gain.setValueAtTime(0.001, now);
-        bGain.gain.linearRampToValueAtTime(0.03, now + 0.05);
-        bGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
-        bell.connect(bGain);
-        bGain.connect(masterGainNode);
-        bell.start(now);
-        bell.stop(now + 1.2);
-      }
+      osc.connect(gain);
+      gain.connect(filter);
+      osc.start(now);
+      osc.stop(now + 2.1);
+    });
 
-    } else if (track.id === 'chiptune') {
-      // 8-BIT ARCADE GAMING RETRO MÜZİK
-      const chordIdx = barIndex % track.arpChords.length;
-      const currentArp = track.arpChords[chordIdx];
-      const noteFreq = currentArp[stepInBar % currentArp.length];
-
-      // Hızlı 16'lık arpej
-      playChiptuneArp(noteFreq, now);
-
-      // 8-bit bas yürüyüşü
-      if (stepInBar === 0 || stepInBar === 4 || stepInBar === 8 || stepInBar === 12) {
-        playChiptuneBass(track.bassRoots[chordIdx], now);
-      }
-
-      // Retro davullar
-      if (stepInBar === 0 || stepInBar === 8) {
-        playKick(now, 'chiptune');
-      }
-      if (stepInBar === 4 || stepInBar === 12) {
-        playSnare(now, 'chiptune');
-      }
-
-    } else if (track.id === 'synthwave') {
-      // CYBERPUNK 2088 SYNTHWAVE DRIVING RİTİM
-      const chordIdx = barIndex % track.sawChords.length;
-
-      // Four-on-the-floor güçlü kick (Her dörtlükte)
-      if (stepInBar % 4 === 0) {
-        playKick(now, 'synthwave');
-      }
-
-      // Snare (2. ve 4. vuruşlarda)
-      if (stepInBar === 4 || stepInBar === 12) {
-        playSnare(now, 'synthwave');
-      }
-
-      // Pompalayan Sawtooth bas (Her 8'lik adımda)
-      if (stepInBar % 2 === 0) {
-        playSynthwaveBass(track.bassRoots[chordIdx], now);
-      }
-
-      // Sinematik Saw Pad akoru (Bar başında)
-      if (stepInBar === 0) {
-        playSynthwavePad(track.sawChords[chordIdx], now);
-      }
-
-    } else if (track.id === 'rainy') {
-      // YAĞMURLU ANKARA: SIFIR DAVUL, YAĞMUR SESİ VE KEÇE PİYANO
-      const chordIdx = barIndex % track.pianoChords.length;
-
-      if (stepInBar === 0) {
-        playRainyPiano(track.pianoChords[chordIdx], now);
-      }
-
-      // Damla / hafif zil tınısı
-      if ((stepInBar === 6 || stepInBar === 12) && Math.random() > 0.3) {
-        const drop = audioCtx.createOscillator();
-        const dGain = audioCtx.createGain();
-        const note = track.dropletNotes[Math.floor(Math.random() * track.dropletNotes.length)];
-        drop.type = 'sine';
-        drop.frequency.setValueAtTime(note, now);
-        dGain.gain.setValueAtTime(0.001, now);
-        dGain.gain.linearRampToValueAtTime(0.02, now + 0.04);
-        dGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-        drop.connect(dGain);
-        dGain.connect(masterGainNode);
-        drop.start(now);
-        drop.stop(now + 0.8);
-      }
+    // Melodi Çanı
+    if (Math.random() > 0.25) {
+      const bell = audioCtx.createOscillator();
+      const bGain = audioCtx.createGain();
+      const note = track.melody[Math.floor(Math.random() * track.melody.length)];
+      bell.type = 'sine';
+      bell.frequency.setValueAtTime(note, now + 0.35);
+      bGain.gain.setValueAtTime(0.0001, now + 0.35);
+      bGain.gain.linearRampToValueAtTime(0.045, now + 0.4);
+      bGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+      bell.connect(bGain);
+      bGain.connect(masterGainNode);
+      bell.start(now + 0.35);
+      bell.stop(now + 1.5);
     }
 
-    currentStep++;
-
-    // Sıradaki adımı BPM hızına göre planla
-    const stepDurationMs = ((60 / track.bpm) / 4) * 1000;
-    sequencerTimer = setTimeout(sequencerStep, stepDurationMs);
+    currentChordIndex++;
   }
 
-  // Müziği başlatan fonksiyon
+  // 2. TÜR: 👾 8-BIT ARCADE / CHIPTUNE RETRO
+  function playChiptuneStep() {
+    if (!audioCtx || !masterGainNode) return;
+    const track = playlistTracks[1];
+    const patternIdx = Math.floor(chiptuneStep / 8) % track.arps.length;
+    const currentPattern = track.arps[patternIdx];
+    const noteIdx = chiptuneStep % currentPattern.notes.length;
+    const noteFreq = currentPattern.notes[noteIdx];
+    const now = audioCtx.currentTime;
+
+    // 8-bit Kare Dalga Arpej (Square Wave)
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(noteFreq, now);
+
+    gain.gain.setValueAtTime(0.045, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
+
+    osc.connect(gain);
+    gain.connect(masterGainNode);
+    osc.start(now);
+    osc.stop(now + 0.11);
+
+    // 8-bit Bas Yürüyüşü (Her 4 adımda bir)
+    if (chiptuneStep % 4 === 0) {
+      const bass = audioCtx.createOscillator();
+      const bGain = audioCtx.createGain();
+      bass.type = 'triangle';
+      bass.frequency.setValueAtTime(currentPattern.bass, now);
+      bGain.gain.setValueAtTime(0.12, now);
+      bGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+      bass.connect(bGain);
+      bGain.connect(masterGainNode);
+      bass.start(now);
+      bass.stop(now + 0.22);
+    }
+
+    chiptuneStep++;
+  }
+
+  // 3. TÜR: 🌆 CYBERPUNK 2088 SYNTHWAVE
+  function playSynthwavePad() {
+    if (!audioCtx || !masterGainNode) return;
+    const track = playlistTracks[2];
+    const currentChord = track.chords[currentChordIndex % track.chords.length];
+    const now = audioCtx.currentTime;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(track.filterFreq, now);
+    filter.Q.setValueAtTime(1.8, now);
+    filter.connect(masterGainNode);
+
+    currentChord.pad.forEach((freq, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      // Hafif stereo chorus / detune
+      osc.frequency.setValueAtTime(freq + (idx % 2 === 0 ? 0.8 : -0.8), now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.04, now + 0.2);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.75);
+
+      osc.connect(gain);
+      gain.connect(filter);
+      osc.start(now);
+      osc.stop(now + 1.75);
+    });
+
+    currentChordIndex++;
+  }
+
+  function playSynthwaveBassPulse() {
+    if (!audioCtx || !masterGainNode) return;
+    const track = playlistTracks[2];
+    const chordIdx = Math.max(0, currentChordIndex - 1) % track.chords.length;
+    const rootFreq = track.chords[chordIdx].bass;
+    const now = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(320, now);
+    filter.Q.setValueAtTime(1.8, now);
+
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(rootFreq, now);
+
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGainNode);
+    osc.start(now);
+    osc.stop(now + 0.18);
+  }
+
+  // 4. TÜR: 🌧️ YAĞMURLU ANKARA AMBİYANS & KEÇE PİYANO
+  function startRainAmbiance() {
+    if (!audioCtx || !masterGainNode || rainSourceNode) return;
+    const buf = getNoiseBuffer(audioCtx);
+    rainSourceNode = audioCtx.createBufferSource();
+    rainSourceNode.buffer = buf;
+    rainSourceNode.loop = true;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1100, audioCtx.currentTime);
+    filter.Q.setValueAtTime(0.8, audioCtx.currentTime);
+
+    rainGainNode = audioCtx.createGain();
+    rainGainNode.gain.setValueAtTime(0.075, audioCtx.currentTime);
+
+    rainSourceNode.connect(filter);
+    filter.connect(rainGainNode);
+    rainGainNode.connect(masterGainNode);
+    rainSourceNode.start();
+  }
+
+  function stopRainAmbiance() {
+    if (rainSourceNode) {
+      try { rainSourceNode.stop(); } catch (e) {}
+      rainSourceNode = null;
+      rainGainNode = null;
+    }
+  }
+
+  function playRainyPiano() {
+    if (!audioCtx || !masterGainNode) return;
+    const track = playlistTracks[3];
+    const chord = track.chords[currentChordIndex % track.chords.length];
+    const now = audioCtx.currentTime;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(track.filterFreq, now);
+    filter.connect(masterGainNode);
+
+    chord.forEach((freq) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.065, now + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.7);
+
+      osc.connect(gain);
+      gain.connect(filter);
+      osc.start(now);
+      osc.stop(now + 2.7);
+    });
+
+    // Yağmur Damlası
+    if (Math.random() > 0.3) {
+      const drop = audioCtx.createOscillator();
+      const dGain = audioCtx.createGain();
+      const note = track.dropletNotes[Math.floor(Math.random() * track.dropletNotes.length)];
+      drop.type = 'sine';
+      drop.frequency.setValueAtTime(note, now + 0.8);
+      drop.frequency.exponentialRampToValueAtTime(note * 0.94, now + 1.25);
+      dGain.gain.setValueAtTime(0.0001, now + 0.8);
+      dGain.gain.linearRampToValueAtTime(0.035, now + 0.85);
+      dGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
+      drop.connect(dGain);
+      dGain.connect(masterGainNode);
+      drop.start(now + 0.8);
+      drop.stop(now + 1.3);
+    }
+
+    currentChordIndex++;
+  }
+
+  // --------------------------------------------------------------------------
+  // D) OYNATMA, DURDURMA VE PARÇA DEĞİŞTİRME YÖNETİMİ
+  // --------------------------------------------------------------------------
+  function clearAudioTimers() {
+    if (playInterval) { clearInterval(playInterval); playInterval = null; }
+    if (secondaryInterval) { clearInterval(secondaryInterval); secondaryInterval = null; }
+    stopRainAmbiance();
+  }
+
   function startPlayback() {
     ensureAudioContext();
+    clearAudioTimers();
 
-    if (sequencerTimer) clearTimeout(sequencerTimer);
     isAudioPlaying = true;
     musicWidget.classList.add('playing');
     if (playPauseIcon) playPauseIcon.textContent = '⏸';
@@ -932,21 +793,31 @@ function initLofiSynthesizer() {
       trackStatusPill.classList.add('playing');
     }
 
-    // Eğer yağmurlu parça seçildiyse yağmur sesini başlat, değilse durdur
     const track = playlistTracks[currentTrackIndex];
-    if (track.id === 'rainy') {
-      startRainSound();
-    } else {
-      stopRainSound();
-    }
+    currentChordIndex = 0;
+    chiptuneStep = 0;
 
-    currentStep = 0;
-    sequencerStep();
+    if (track.id === 'lofi') {
+      playLofiChord();
+      playInterval = setInterval(playLofiChord, track.interval);
+    } else if (track.id === 'chiptune') {
+      playChiptuneStep();
+      playInterval = setInterval(playChiptuneStep, track.stepInterval);
+    } else if (track.id === 'synthwave') {
+      playSynthwavePad();
+      playInterval = setInterval(playSynthwavePad, track.padInterval);
+      playSynthwaveBassPulse();
+      secondaryInterval = setInterval(playSynthwaveBassPulse, track.bassInterval);
+    } else if (track.id === 'rainy') {
+      startRainAmbiance();
+      playRainyPiano();
+      playInterval = setInterval(playRainyPiano, track.interval);
+    }
   }
 
-  // Müziği durduran fonksiyon
   function stopPlayback() {
     isAudioPlaying = false;
+    clearAudioTimers();
     musicWidget.classList.remove('playing');
     if (playPauseIcon) playPauseIcon.textContent = '▶';
     if (pillPlayIcon) pillPlayIcon.textContent = '▶';
@@ -954,25 +825,17 @@ function initLofiSynthesizer() {
       trackStatusPill.textContent = 'Durduruldu';
       trackStatusPill.classList.remove('playing');
     }
-    if (sequencerTimer) {
-      clearTimeout(sequencerTimer);
-      sequencerTimer = null;
-    }
-    stopRainSound();
   }
 
-  // Parça değiştirme fonksiyonu
   function changeTrack(newIndex) {
-    stopRainSound();
-    currentTrackIndex = newIndex;
+    currentTrackIndex = (newIndex + playlistTracks.length) % playlistTracks.length;
     updateTrackDisplay();
-    currentStep = 0;
     if (isAudioPlaying) {
       startPlayback();
     }
   }
 
-  // Oynat / Durdur Butonu
+  // Çekirdek Oynat/Durdur Butonları
   if (playPauseBtn) {
     playPauseBtn.addEventListener('click', () => {
       if (isAudioPlaying) {
@@ -983,19 +846,29 @@ function initLofiSynthesizer() {
     });
   }
 
-  // Sonraki Parçaya Geçiş
-  if (nextTrackBtn) {
-    nextTrackBtn.addEventListener('click', () => {
-      const nextIdx = (currentTrackIndex + 1) % playlistTracks.length;
-      changeTrack(nextIdx);
+  // Yüzen hap üzerindeki ikon kutucuğuna tıklandığında da doğrudan oynat/durdur
+  const pillIconBox = musicWidget.querySelector('.music-icon-box');
+  if (pillIconBox) {
+    pillIconBox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isAudioPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
+      }
     });
   }
 
-  // Önceki Parçaya Geçiş
+  // Sonraki ve Önceki Parça
+  if (nextTrackBtn) {
+    nextTrackBtn.addEventListener('click', () => {
+      changeTrack(currentTrackIndex + 1);
+    });
+  }
+
   if (prevTrackBtn) {
     prevTrackBtn.addEventListener('click', () => {
-      const prevIdx = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
-      changeTrack(prevIdx);
+      changeTrack(currentTrackIndex - 1);
     });
   }
 
@@ -1015,14 +888,12 @@ function initLofiSynthesizer() {
   };
 
   window.nextTrackFromTerminal = function() {
-    const nextIdx = (currentTrackIndex + 1) % playlistTracks.length;
-    changeTrack(nextIdx);
+    changeTrack(currentTrackIndex + 1);
     return `Sonraki parçaya geçildi: "${playlistTracks[currentTrackIndex].title}"`;
   };
 
   window.prevTrackFromTerminal = function() {
-    const prevIdx = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
-    changeTrack(prevIdx);
+    changeTrack(currentTrackIndex - 1);
     return `Önceki parçaya dönüldü: "${playlistTracks[currentTrackIndex].title}"`;
   };
 
