@@ -1376,3 +1376,58 @@ body {
 .contact-quick-actions {
   margin-bottom: 0.5rem;
 }
+
+/* Human-readable Work Summary Grid on Home Page */
+.intro-work-summary {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.work-summary-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.work-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.work-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1.15rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.work-item:hover {
+  border-color: var(--border-color-hover);
+  transform: translateY(-1px);
+}
+
+.work-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.work-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+
+.work-item-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 0 !important;
+}
