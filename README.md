@@ -10,7 +10,7 @@
 
 Modern, yüksek performanslı ve harici kütüphane şişkinliği (**zero-dependency / 0 KB dış kütüphane**) barındırmayan kişisel geliştirici portfolyosu. Saf semantik HTML5, modern CSS ve vanilla JavaScript standartları ile sıfırdan el işçiliğiyle geliştirilmiştir.
 
-🌐 **Canlı Site:** [https://2f7fjrk4sw-prog.github.io/portfolio/](https://2f7fjrk4sw-prog.github.io/portfolio/)
+🌐 **Canlı Site:** https://portfolio-bdm-d48f.vercel.app/
 
 ---
 
