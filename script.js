@@ -1348,12 +1348,14 @@ Pratikler: Clean Code, Defansif Tasarım, YAGNI & KISS
         `, 'info');
         break;
 
+      // Yüklü projeler ve portfolyo bağlantıları listesi (projects.html ile senkronize)
       case 'projects':
         appendLine(`
-1. Oyun Haberleri Platformu (Vanilla JS + Node.js) -> projects.html
-2. C# Algoritmik Konsol Paketi (.NET 10)           -> projects.html
-3. Unity 2D/3D Oyun Mekanikleri (C# + Unity)      -> projects.html
-4. Minimalist Portfolyo Sistemi (Pure Semantic)    -> index.html
+1. (prototip) DSİ İhale Zekası (.NET 10 + Vanilla JS) -> projects.html
+2. Oyun Haberleri Platformu (Vanilla JS + Node.js)      -> projects.html
+3. C# Algoritmik Konsol Paketi (.NET 10)                -> projects.html
+4. Unity 2D/3D Oyun Mekanikleri (C# + Unity)           -> projects.html
+5. Minimalist Portfolyo Sistemi (Pure Semantic)         -> index.html
         `, 'cyan');
         break;
 

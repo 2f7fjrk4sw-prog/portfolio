@@ -40,7 +40,12 @@
 
 7. **Doğrulama ve Git Disiplini:**
    - JavaScript dosyası değiştirildiğinde her zaman sözdizimi doğrulaması yapılmalıdır (`node -c script.js`).
-   - Yapılan her anlamlı değişiklik anlaşılır bir commit mesajıyla GitHub `main` dalına pushlanmalıdır.
+   - Yapılan her anlamlı değişiklik kullanıcıdan ekstra onay/hatırlatma beklemeden doğrudan anlaşılır bir commit mesajıyla GitHub `main` dalına pushlanmalıdır (bu kural geliştirilen **bütün projeler** için geçerlidir).
+
+8. **Portfolyoya Yeni Proje Ekleme Standardı:**
+   - Kullanıcı `"ekle"` dediğinde ilgili proje `projects.html` dosyasına eklenmeli, altına sade ve açıklayıcı bir Türkçe ile **ne işe yaradığı** yazılmalı, ayrıca `script.js` içindeki terminal `projects` çıktısı güncellenmelidir.
+   - Başına `(prototip)` etiketi **yalnızca `dsi-ihale-analiz` (DSİ İhale Zekası)** projesine özel olarak eklenir; sonraki projelerde kullanıcı açıkça belirtmedikçe başlığa `(prototip)` yazılmaz.
+   - Ekleme tamamlandığında `portfolio` deposu ekstra hatırlatma beklemeden GitHub'a pushlanır.
 
 ---
 
@@ -69,7 +74,7 @@ Ana Odak Alanları:
 portfolio/
 ├── index.html        # Ana Sayfa: Canlı saat, aktivite simülatörü, Baran'ın notu, hızlı navigasyon
 ├── about.html        # Hakkımda: Akademik arka plan, yazılım felsefesi, çalışma prensipleri
-├── projects.html     # Projeler: Oyun Haberleri Platformu, C# Konsol Paketi, Unity Prototipi
+├── projects.html     # Projeler: (prototip) DSİ İhale Zekası, Oyun Haberleri Platformu, C# Konsol Paketi, Unity Prototipi
 ├── skills.html       # Yetkinlikler: Kategorik yetenekler + Unity Fizik Motoru tetikleyicisi
 ├── contact.html      # İletişim: E-posta bağlantısı, tek tıkla panoya kopyalama ve GitHub linki
 ├── style.css         # Tek merkezli karanlık tema, CSS değişkenleri, responsive grid & widget stilleri
